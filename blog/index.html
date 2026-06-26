@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>llm-d Year in Review: From Red Hat Summit to CNCF Sandbox in 10 Months</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0e17;--surface:#111827;--surface2:#1a2332;--border:#1e293b;
+  --text:#e2e8f0;--text-dim:#94a3b8;--text-muted:#64748b;
+  --accent:#3b82f6;--accent-glow:rgba(59,130,246,.12);
+  --green:#10b981;--red:#ef4444;--yellow:#f59e0b;--purple:#a855f7;--cyan:#06b6d4;
+  --font-sans:'Inter',system-ui,-apple-system,sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.8}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.blog-header{max-width:740px;margin:0 auto;padding:80px 24px 40px;text-align:center}
+.blog-header .tag{display:inline-block;padding:4px 14px;border-radius:20px;background:rgba(6,182,212,.12);color:var(--cyan);font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px}
+.blog-header h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:16px}
+.blog-header .meta{color:var(--text-muted);font-size:.85rem}
+.blog-header .meta span{margin:0 8px}
+
+article{max-width:740px;margin:0 auto;padding:0 24px 80px}
+article h2{font-size:1.5rem;font-weight:700;margin:48px 0 16px;padding-top:24px;border-top:1px solid var(--border)}
+article h3{font-size:1.15rem;font-weight:600;margin:32px 0 12px;color:var(--accent)}
+article p{margin-bottom:16px;color:var(--text-dim);font-size:.95rem}
+article p strong{color:var(--text);font-weight:600}
+
+.callout{background:var(--surface);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:20px 24px;margin:24px 0;font-size:.9rem}
+.callout.cncf{border-left-color:var(--cyan)}
+.callout.enterprise{border-left-color:var(--red)}
+.callout.milestone{border-left-color:var(--green)}
+.callout .callout-title{font-weight:700;color:var(--text);margin-bottom:6px;font-size:.95rem}
+.callout p{margin-bottom:0}
+
+.timeline-mini{margin:24px 0;padding:0;list-style:none}
+.timeline-mini li{position:relative;padding:12px 0 12px 28px;border-left:2px solid var(--border);font-size:.85rem;color:var(--text-dim)}
+.timeline-mini li::before{content:'';position:absolute;left:-6px;top:16px;width:10px;height:10px;border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+.timeline-mini li strong{color:var(--text);display:block;font-size:.9rem}
+
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin:24px 0}
+.stats-row .s{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 12px}
+.stats-row .s .n{font-size:1.6rem;font-weight:800;font-family:var(--font-mono);color:var(--accent)}
+.stats-row .s .l{font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+
+.cta{text-align:center;margin:48px 0;padding:32px;background:var(--surface);border:1px solid var(--border);border-radius:12px}
+.cta h3{margin-bottom:12px;color:var(--text)}
+.cta p{color:var(--text-dim);font-size:.9rem}
+.cta a.btn{display:inline-block;margin-top:16px;padding:10px 28px;background:var(--accent);color:#fff;border-radius:8px;font-weight:600;font-size:.9rem;transition:all .2s}
+.cta a.btn:hover{background:#2563eb;text-decoration:none;transform:translateY(-1px)}
+
+footer{max-width:740px;margin:0 auto;padding:40px 24px;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:.8rem}
+</style>
+</head>
+<body>
+
+<div class="blog-header">
+  <div class="tag">Year in Review</div>
+  <h1>llm-d: From Red Hat Summit to CNCF Sandbox in 10 Months</h1>
+  <div class="meta">
+    <span>Markell Rawls</span>
+    <span>|</span>
+    <span>June 2026</span>
+    <span>|</span>
+    <span>8 min read</span>
+  </div>
+</div>
+
+<article>
+  <p>In May 2025, Red Hat walked onto the Summit stage in Boston and announced <strong>llm-d</strong> — an open-source framework for distributed LLM inference on Kubernetes. Thirteen months later, the project is a CNCF Sandbox member, has shipped seven releases, and has become the backbone of Red Hat's enterprise AI inference story. This is how it happened.</p>
+
+  <h2>The Origin: Why llm-d Exists</h2>
+
+  <p>By early 2025, the industry had a model-serving problem. vLLM could serve a single model on a single node efficiently, but organizations needed to serve <strong>dozens of models across hundreds of GPUs</strong> with predictable latency and cost. The gap between "it works on one box" and "it works in production at scale" was enormous.</p>
+
+  <p>The core insight behind llm-d was that <strong>LLM inference routing is fundamentally different from traditional load balancing</strong>. A KV cache hit on the right pod can be worth more than any amount of load-balancing intelligence. Route a request to a pod that already has the conversation's prefix cached, and you skip the entire prefill computation. Route it to a random pod, and you pay the full cost again.</p>
+
+  <p>This insight — that <strong>cache topology should drive routing decisions</strong> — became the foundation of the Endpoint Picker (EPP), llm-d's routing brain.</p>
+
+  <h2>May 2025: The Launch</h2>
+
+  <p>llm-d launched at Red Hat Summit on May 20, 2025, with an unusually broad coalition of founding partners:</p>
+
+  <div class="stats-row">
+    <div class="s"><div class="n">5</div><div class="l">Core Partners</div></div>
+    <div class="s"><div class="n">8</div><div class="l">Supporting Orgs</div></div>
+    <div class="s"><div class="n">2</div><div class="l">Universities</div></div>
+  </div>
+
+  <p><strong>Red Hat, Google Cloud, IBM Research, CoreWeave, and NVIDIA</strong> formed the core, with AMD, Cisco, Hugging Face, Intel, Lambda, and Mistral AI providing support. UC Berkeley (the vLLM originators) and the University of Chicago (LMCache) brought academic research depth.</p>
+
+  <div class="callout enterprise">
+    <div class="callout-title">Simultaneous Enterprise Launch</div>
+    <p>Red Hat announced the <strong>Red Hat AI Inference Server</strong> alongside llm-d — an enterprise productization built on vLLM + llm-d. This "upstream first, enterprise alongside" approach became a defining pattern for the project.</p>
+  </div>
+
+  <p>The first tagged release (v0.1.0) shipped within days, establishing a rapid release cadence that would define the project's trajectory.</p>
+
+  <h2>The Release Cadence: Seven Versions in Thirteen Months</h2>
+
+  <ul class="timeline-mini">
+    <li><strong>v0.1 — May 2025</strong>Foundation architecture. Basic inference routing through the llm-d-planner component.</li>
+    <li><strong>v0.2 "First Well-Lit Paths" — July 2025</strong>The release that proved the thesis. Prefix-cache-aware scheduling, prefill/decode disaggregation, and MoE support for DeepSeek-R1.</li>
+    <li><strong>v0.3 "Wider Well-Lit Paths" — October 2025</strong>Inference Gateway v1.0 GA. Cross-platform hardware: NVIDIA, Intel XPU, Google TPU. NIXL integration for KV cache transfer. 2.2k tokens/sec per GPU on H200 clusters.</li>
+    <li><strong>v0.4 — December 2025</strong>40% reduction in per-output-token latency for DeepSeek V3.1 on H200. Speculative decoding. CPU memory tiering for prefix cache offload.</li>
+    <li><strong>v0.5 "Sustaining Performance at Scale" — February 2026</strong>The scale release. Hierarchical KV offloading across GPU/CPU/disk. Cache-aware LoRA routing. Active-active HA. Scale-to-zero. Validated ~50k output tokens/sec on a 16x16 B200 topology.</li>
+    <li><strong>v0.7 — June 2026</strong>Maturity milestone. CUDA 13.0.2, standalone mode as default, documentation overhaul, CI coverage expansion.</li>
+  </ul>
+
+  <h3>What the Release Names Tell Us</h3>
+
+  <p>The "Well-Lit Paths" naming wasn't just branding — it reflected the project's philosophy of providing <strong>opinionated, validated deployment patterns</strong> rather than a toolkit of primitives. Each "path" was a tested topology: single-node, disaggregated P/D, multi-node MoE. Users picked a path, not a pile of configs.</p>
+
+  <h2>The Technical Arc: From Routing to Full Stack</h2>
+
+  <p>llm-d's evolution followed a clear arc — starting with the routing problem and expanding outward:</p>
+
+  <h3>Phase 1: Smart Routing (v0.1–v0.2)</h3>
+  <p>The EPP (Endpoint Picker) was the first piece. It scores pods based on KV cache match ratio, queue depth, GPU utilization, and health status. A request hits the Gateway API, EPP picks the optimal pod, and the request lands where its prefix is already cached. Simple in concept, transformative in practice — prefix cache hit rates above 80% became routine.</p>
+
+  <h3>Phase 2: Disaggregation (v0.2–v0.3)</h3>
+  <p>With routing solved, the next bottleneck was the prefill/decode asymmetry. Prefill is compute-bound (matrix multiplications over the full input). Decode is memory-bandwidth-bound (one token at a time, reading the full KV cache). Running both on the same GPU means neither phase gets optimal hardware utilization.</p>
+
+  <p>llm-d introduced <strong>disaggregated prefill/decode</strong> — routing prefill to compute-optimized pods and decode to memory-optimized pods, with NIXL handling KV cache transfer between them. The pd-sidecar container manages the handoff transparently.</p>
+
+  <h3>Phase 3: Scale (v0.3–v0.5)</h3>
+  <p>The scale phase tackled what happens when you go from 4 GPUs to 400. Hierarchical KV offloading (GPU → CPU → disk) prevented cache eviction storms. Active-active HA eliminated single points of failure. Scale-to-zero autoscaling cut costs for bursty workloads. The v0.5 benchmark numbers told the story: <strong>~50,000 output tokens per second on a 16x16 B200 topology</strong>.</p>
+
+  <h3>Phase 4: Maturity (v0.7+)</h3>
+  <p>The current phase is about <strong>making it easy</strong>. Standalone mode eliminates the dependency on external orchestrators for simple deployments. Documentation and CI coverage are being treated as features, not afterthoughts. The project is optimizing for the new user's first hour, not just the expert's peak throughput.</p>
+
+  <h2>The CNCF Moment</h2>
+
+  <div class="callout cncf">
+    <div class="callout-title">March 24, 2026 — KubeCon Europe, Amsterdam</div>
+    <p>llm-d is accepted into the CNCF Sandbox, donated by IBM Research, Red Hat, and Google Cloud. The donation signals that the project's governance is truly multi-vendor — no single company controls its direction.</p>
+  </div>
+
+  <p>CNCF Sandbox acceptance mattered for three reasons:</p>
+
+  <p><strong>Governance.</strong> Moving to the CNCF established vendor-neutral governance. IBM Research, Red Hat, and Google Cloud each contributed IP but none controls the project's roadmap.</p>
+
+  <p><strong>Signal.</strong> The CNCF's acceptance criteria validate that a project solves a real problem for the cloud-native ecosystem. For llm-d, it confirmed that AI inference routing belongs in the Kubernetes platform layer, not as an afterthought bolted on top.</p>
+
+  <p><strong>Ecosystem.</strong> CNCF projects compose. llm-d integrates with Gateway API, KServe, Prometheus, and the broader Kubernetes control plane. Being in the CNCF means these integrations are first-class, not forks-and-patches.</p>
+
+  <h2>The Enterprise Track</h2>
+
+  <p>While the open-source project moved fast, the enterprise track kept pace:</p>
+
+  <ul class="timeline-mini">
+    <li><strong>October 2025 — Red Hat AI 3</strong>llm-d reaches GA as the Red Hat AI Inference Server. Production support, certified hardware, enterprise SLAs.</li>
+    <li><strong>February 2026 — Red Hat AI 3.3</strong>Scale-to-zero, LoRA routing, hierarchical cache management in the enterprise product.</li>
+    <li><strong>May 2026 — Red Hat AI 3.4</strong>Red Hat AI Inference on IBM Cloud. Expansion beyond OpenShift to vanilla Kubernetes on CoreWeave and Azure.</li>
+  </ul>
+
+  <p>The cadence is notable: every major open-source release appeared in the enterprise product within 2–3 months. This wasn't a "throw it over the wall" model — the upstream and downstream moved in lockstep.</p>
+
+  <h2>By the Numbers</h2>
+
+  <div class="stats-row">
+    <div class="s"><div class="n">7</div><div class="l">Releases</div></div>
+    <div class="s"><div class="n">13</div><div class="l">Partners</div></div>
+    <div class="s"><div class="n">50k</div><div class="l">tok/s on B200</div></div>
+    <div class="s"><div class="n">3</div><div class="l">Hardware Vendors</div></div>
+  </div>
+
+  <div class="stats-row">
+    <div class="s"><div class="n">4</div><div class="l">Enterprise Releases</div></div>
+    <div class="s"><div class="n">1</div><div class="l">CNCF Sandbox</div></div>
+    <div class="s"><div class="n">3</div><div class="l">Cloud Providers</div></div>
+    <div class="s"><div class="n">13</div><div class="l">Months to CNCF</div></div>
+  </div>
+
+  <h2>What's Next</h2>
+
+  <p>The roadmap points toward three themes:</p>
+
+  <p><strong>Multi-cluster federation.</strong> Routing across clusters, not just within them. When your inference fleet spans AWS, GCP, and on-prem, the EPP needs to think bigger.</p>
+
+  <p><strong>Model-aware autoscaling.</strong> Scaling decisions that understand model characteristics — a 7B model and a 70B model have fundamentally different scaling curves, and the autoscaler should know that.</p>
+
+  <p><strong>Deeper hardware integration.</strong> As accelerators diversify (B200, MI300X, Gaudi 3, TPU v6), llm-d's routing layer needs hardware-aware scheduling that matches model architectures to silicon strengths.</p>
+
+  <p>Thirteen months in, llm-d has gone from announcement to CNCF project, from prototype to production infrastructure serving enterprise workloads. The speed is unusual, but so is the problem — distributed LLM inference is the kind of challenge that moves fast because it has to.</p>
+
+  <div class="cta">
+    <h3>Explore the Interactive Timeline</h3>
+    <p>See every milestone, release, and partnership mapped across llm-d's first year.</p>
+    <a href="../" class="btn">Open the Timeline</a>
+  </div>
+</article>
+
+<footer>
+  <p>llm-d Year in Review — Part of the llm-d Content Hub</p>
+</footer>
+</body>
+</html>
