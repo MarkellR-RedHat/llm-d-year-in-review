@@ -3,121 +3,157 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>llm-d Year in Review: The Definitive Retrospective on Distributed LLM Inference</title>
+<title>llm-d Year in Review: From a Summit Stage to the CNCF — The Story of 1,000x</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0a0e17;--surface:#111827;--surface2:#1a2332;--border:#1e293b;
-  --text:#e2e8f0;--text-dim:#94a3b8;--text-muted:#64748b;
+  --bg:#06090f;--surface:#0d1320;--surface2:#141d2e;--border:#1a2740;
+  --text:#e8edf5;--text-dim:#94a3b8;--text-muted:#5e7290;
   --accent:#3b82f6;--accent-glow:rgba(59,130,246,.12);--accent-dark:#1e40af;
-  --green:#10b981;--red:#ef4444;--yellow:#f59e0b;--purple:#a855f7;--cyan:#06b6d4;--orange:#f97316;
+  --green:#10b981;--red:#ef4444;--yellow:#f59e0b;--purple:#a855f7;
+  --cyan:#06b6d4;--orange:#f97316;--teal:#14b8a6;
   --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
   --font-mono:'JetBrains Mono','Fira Code','Cascadia Code',monospace;
+  --font-serif:'Georgia','Times New Roman',serif;
   --content-width:740px;
   --toc-width:220px;
 }
 
 html{scroll-behavior:smooth}
-body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.8;overflow-x:hidden}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.85;overflow-x:hidden}
 a{color:var(--accent);text-decoration:none;transition:color .2s}
 a:hover{text-decoration:underline;color:#60a5fa}
 ::selection{background:rgba(59,130,246,.3);color:#fff}
 
 /* Reading progress bar */
-#reading-progress{position:fixed;top:0;left:0;width:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--cyan));z-index:1000;transition:width .1s linear;box-shadow:0 0 8px rgba(59,130,246,.5)}
+#reading-progress{position:fixed;top:0;left:0;width:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--cyan),var(--teal));z-index:1000;transition:width .1s linear;box-shadow:0 0 12px rgba(6,182,212,.5)}
 
 /* Floating TOC sidebar */
 .toc-sidebar{position:fixed;top:100px;right:calc((100vw - var(--content-width)) / 2 - var(--toc-width) - 60px);width:var(--toc-width);max-height:calc(100vh - 140px);overflow-y:auto;z-index:50;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .toc-sidebar::-webkit-scrollbar{width:3px}
 .toc-sidebar::-webkit-scrollbar-track{background:transparent}
 .toc-sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-.toc-sidebar .toc-title{font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin-bottom:12px;font-weight:600}
-.toc-sidebar a{display:block;padding:5px 0 5px 14px;font-size:.72rem;color:var(--text-muted);line-height:1.5;border-left:2px solid var(--border);transition:all .25s ease;text-decoration:none}
+.toc-sidebar .toc-title{font-size:.65rem;text-transform:uppercase;letter-spacing:.14em;color:var(--text-muted);margin-bottom:14px;font-weight:600}
+.toc-sidebar a{display:block;padding:6px 0 6px 16px;font-size:.72rem;color:var(--text-muted);line-height:1.5;border-left:2px solid var(--border);transition:all .25s ease;text-decoration:none}
 .toc-sidebar a:hover{color:var(--text-dim);text-decoration:none}
-.toc-sidebar a.active{color:var(--accent);border-left-color:var(--accent);font-weight:600}
+.toc-sidebar a.active{color:var(--cyan);border-left-color:var(--cyan);font-weight:600}
 
-/* Blog header */
-.blog-header{max-width:var(--content-width);margin:0 auto;padding:80px 24px 40px;text-align:center}
-.blog-header .tag{display:inline-block;padding:4px 16px;border-radius:20px;background:rgba(6,182,212,.12);color:var(--cyan);font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px}
-.blog-header h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-.03em;line-height:1.2;margin-bottom:20px;background:linear-gradient(135deg,#e2e8f0 60%,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.blog-header .meta{color:var(--text-muted);font-size:.85rem;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+/* Hero header */
+.blog-header{max-width:var(--content-width);margin:0 auto;padding:100px 24px 60px;text-align:center;position:relative}
+.blog-header::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:200vw;height:100%;background:radial-gradient(ellipse 60% 70% at 50% 20%,rgba(6,182,212,.08),transparent 70%);pointer-events:none;z-index:0}
+.blog-header .tag{display:inline-block;padding:5px 20px;border-radius:24px;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2);color:var(--cyan);font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;margin-bottom:20px;position:relative;z-index:1}
+.blog-header h1{font-size:clamp(2rem,5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1.15;margin-bottom:24px;background:linear-gradient(135deg,#f0f4ff 30%,#06b6d4 70%,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;position:relative;z-index:1}
+.blog-header .subtitle{color:var(--text-dim);font-size:1.05rem;line-height:1.7;max-width:580px;margin:0 auto 28px;position:relative;z-index:1;font-style:italic;font-family:var(--font-serif)}
+.blog-header .meta{color:var(--text-muted);font-size:.85rem;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;position:relative;z-index:1}
 .blog-header .meta .sep{color:var(--border)}
-.blog-header .word-count{display:inline-block;margin-top:12px;font-size:.7rem;color:var(--text-muted);opacity:.5;font-family:var(--font-mono)}
 
 /* Article */
 article{max-width:var(--content-width);margin:0 auto;padding:0 24px 80px}
-article section{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+article section{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
 article section.visible{opacity:1;transform:translateY(0)}
 
-article h2{font-size:1.5rem;font-weight:700;margin:56px 0 18px;padding-top:28px;border-top:1px solid var(--border);scroll-margin-top:40px;letter-spacing:-.01em}
-article h3{font-size:1.15rem;font-weight:600;margin:36px 0 12px;color:var(--accent);scroll-margin-top:40px}
-article h4{font-size:1rem;font-weight:600;margin:24px 0 10px;color:var(--text)}
-article p{margin-bottom:18px;color:var(--text-dim);font-size:.95rem}
+article h2{font-size:1.55rem;font-weight:700;margin:72px 0 22px;padding-top:32px;border-top:1px solid var(--border);scroll-margin-top:40px;letter-spacing:-.02em;line-height:1.3}
+article h3{font-size:1.15rem;font-weight:600;margin:40px 0 14px;color:var(--accent);scroll-margin-top:40px}
+article h4{font-size:1rem;font-weight:600;margin:28px 0 12px;color:var(--text)}
+article p{margin-bottom:22px;color:var(--text-dim);font-size:.95rem;line-height:1.9}
 article p strong{color:var(--text);font-weight:600}
-article ul,article ol{margin-bottom:18px;padding-left:24px;color:var(--text-dim);font-size:.95rem}
-article li{margin-bottom:6px}
+article ul,article ol{margin-bottom:22px;padding-left:24px;color:var(--text-dim);font-size:.95rem}
+article li{margin-bottom:8px;line-height:1.8}
 article li strong{color:var(--text)}
 
+/* Lead paragraph */
+.lead{font-size:1.1rem;line-height:2;color:var(--text-dim);font-family:var(--font-serif);font-style:italic}
+
+/* Pull quotes */
+.pull-quote{border-left:3px solid var(--cyan);padding:20px 0 20px 28px;margin:40px 0;font-size:1.2rem;font-weight:600;line-height:1.6;color:var(--text);letter-spacing:-.01em;position:relative}
+.pull-quote::before{content:'';position:absolute;left:0;top:0;width:3px;height:100%;background:linear-gradient(180deg,var(--cyan),var(--accent));border-radius:2px}
+.pull-quote .attribution{display:block;margin-top:10px;font-size:.8rem;font-weight:400;color:var(--text-muted);letter-spacing:0;font-style:italic}
+
 /* Callout boxes */
-.callout{background:var(--surface);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:22px 26px;margin:28px 0;font-size:.9rem;position:relative;overflow:hidden}
-.callout::after{content:'';position:absolute;top:0;right:0;width:80px;height:100%;background:linear-gradient(90deg,transparent,rgba(59,130,246,.03));pointer-events:none}
+.callout{background:var(--surface);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:24px 28px;margin:32px 0;font-size:.9rem;position:relative;overflow:hidden}
+.callout::after{content:'';position:absolute;top:0;right:0;width:100px;height:100%;background:linear-gradient(90deg,transparent,rgba(59,130,246,.03));pointer-events:none}
 .callout.insight{border-left-color:var(--cyan);background:linear-gradient(135deg,var(--surface),rgba(6,182,212,.05))}
 .callout.insight::after{background:linear-gradient(90deg,transparent,rgba(6,182,212,.04))}
 .callout.enterprise{border-left-color:var(--red)}
 .callout.milestone{border-left-color:var(--green)}
-.callout.cncf{border-left-color:var(--cyan)}
 .callout.warning{border-left-color:var(--yellow)}
-.callout .callout-title{font-weight:700;color:var(--text);margin-bottom:8px;font-size:.95rem;display:flex;align-items:center;gap:8px}
+.callout .callout-title{font-weight:700;color:var(--text);margin-bottom:10px;font-size:.95rem;display:flex;align-items:center;gap:8px}
 .callout p{margin-bottom:0;font-size:.88rem}
-.callout p+p{margin-top:10px}
+.callout p+p{margin-top:12px}
+
+/* CNCF special treatment */
+.callout.cncf{border-left-color:var(--teal);background:linear-gradient(135deg,rgba(20,184,166,.06),rgba(6,182,212,.04),var(--surface));box-shadow:0 0 40px rgba(6,182,212,.06),inset 0 0 40px rgba(20,184,166,.03);border:1px solid rgba(20,184,166,.15);border-left:3px solid var(--teal)}
+.callout.cncf::after{background:linear-gradient(90deg,transparent,rgba(20,184,166,.05))}
+.callout.cncf .callout-title{color:var(--teal)}
+
+.cncf-section h2{background:linear-gradient(135deg,var(--text) 40%,var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cncf-section{position:relative}
+.cncf-section::before{content:'';position:absolute;top:-40px;left:-100px;right:-100px;bottom:-40px;background:radial-gradient(ellipse 80% 50% at 50% 30%,rgba(20,184,166,.04),transparent 70%);pointer-events:none;z-index:-1}
 
 /* Stats row */
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:28px 0}
-.stats-row .s{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:22px 14px;transition:border-color .3s,transform .3s}
-.stats-row .s:hover{border-color:var(--accent);transform:translateY(-2px)}
-.stats-row .s .n{font-size:1.7rem;font-weight:800;font-family:var(--font-mono);color:var(--accent);line-height:1.2}
-.stats-row .s .l{font-size:.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-top:6px}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin:32px 0}
+.stats-row .s{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px 16px;transition:border-color .3s,transform .3s}
+.stats-row .s:hover{border-color:var(--cyan);transform:translateY(-3px);box-shadow:0 8px 24px rgba(6,182,212,.08)}
+.stats-row .s .n{font-size:1.8rem;font-weight:800;font-family:var(--font-mono);background:linear-gradient(135deg,var(--cyan),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2}
+.stats-row .s .l{font-size:.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-top:8px}
 
 /* Performance benchmark table */
-.bench-table{width:100%;border-collapse:collapse;margin:28px 0;font-size:.85rem;border-radius:12px;overflow:hidden}
+.bench-table{width:100%;border-collapse:collapse;margin:32px 0;font-size:.85rem;border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.2)}
 .bench-table thead{background:var(--surface2)}
-.bench-table th{padding:14px 16px;text-align:left;font-weight:600;color:var(--text);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--accent)}
-.bench-table td{padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-dim);vertical-align:top}
+.bench-table th{padding:16px 18px;text-align:left;font-weight:600;color:var(--text);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--cyan)}
+.bench-table td{padding:14px 18px;border-bottom:1px solid var(--border);color:var(--text-dim);vertical-align:top}
 .bench-table tr{background:var(--surface);transition:background .2s}
 .bench-table tr:hover{background:var(--surface2)}
-.bench-table .throughput{color:var(--accent);font-weight:700;font-family:var(--font-mono);font-size:.9rem}
+.bench-table .throughput{color:var(--cyan);font-weight:700;font-family:var(--font-mono);font-size:.9rem}
 .bench-table .improvement{color:var(--green);font-size:.75rem;font-weight:600}
 
 /* CTA box */
-.cta{text-align:center;margin:56px 0;padding:36px;background:linear-gradient(135deg,var(--surface),rgba(59,130,246,.06));border:1px solid var(--border);border-radius:14px;position:relative;overflow:hidden}
-.cta::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle at center,rgba(59,130,246,.06),transparent 50%);pointer-events:none}
-.cta h3{margin-bottom:12px;color:var(--text);font-size:1.2rem}
-.cta p{color:var(--text-dim);font-size:.9rem;max-width:480px;margin:0 auto}
-.cta a.btn{display:inline-block;margin-top:18px;padding:12px 32px;background:var(--accent);color:#fff;border-radius:8px;font-weight:600;font-size:.9rem;transition:all .25s;text-decoration:none;position:relative;z-index:1}
-.cta a.btn:hover{background:#2563eb;text-decoration:none;transform:translateY(-2px);box-shadow:0 6px 20px rgba(59,130,246,.3)}
+.cta{text-align:center;margin:64px 0;padding:44px;background:linear-gradient(135deg,var(--surface),rgba(6,182,212,.06));border:1px solid rgba(20,184,166,.15);border-radius:16px;position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle at center,rgba(6,182,212,.06),transparent 50%);pointer-events:none}
+.cta h3{margin-bottom:14px;color:var(--text);font-size:1.25rem}
+.cta p{color:var(--text-dim);font-size:.9rem;max-width:500px;margin:0 auto}
+.cta a.btn{display:inline-block;margin-top:20px;padding:14px 36px;background:linear-gradient(135deg,var(--accent),var(--cyan));color:#fff;border-radius:10px;font-weight:600;font-size:.9rem;transition:all .25s;text-decoration:none;position:relative;z-index:1;box-shadow:0 4px 16px rgba(6,182,212,.2)}
+.cta a.btn:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 8px 28px rgba(6,182,212,.35)}
+.cta a.btn+a.btn{margin-left:12px;background:transparent;border:1px solid var(--border);box-shadow:none;color:var(--text-dim)}
+.cta a.btn+a.btn:hover{border-color:var(--cyan);color:var(--text);box-shadow:0 4px 16px rgba(6,182,212,.1)}
 
 /* Competitive landscape cards */
-.comp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin:24px 0}
-.comp-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;transition:border-color .3s}
-.comp-card:hover{border-color:var(--accent)}
-.comp-card h4{margin:0 0 10px;font-size:1rem;color:var(--text)}
-.comp-card p{font-size:.85rem;color:var(--text-dim);margin-bottom:0}
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin:28px 0}
+.comp-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;transition:border-color .3s,box-shadow .3s}
+.comp-card:hover{border-color:var(--accent);box-shadow:0 4px 20px rgba(59,130,246,.08)}
+.comp-card h4{margin:0 0 12px;font-size:1rem;color:var(--text)}
+.comp-card p{font-size:.85rem;color:var(--text-dim);margin-bottom:0;line-height:1.75}
+
+/* Partner roster */
+.partner-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:28px 0}
+.partner-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;transition:border-color .3s}
+.partner-item:hover{border-color:var(--cyan)}
+.partner-item .partner-name{font-weight:700;color:var(--text);font-size:.9rem;margin-bottom:6px}
+.partner-item .partner-role{font-size:.78rem;color:var(--text-muted);line-height:1.6}
 
 /* Footer */
-footer{max-width:var(--content-width);margin:0 auto;padding:40px 24px;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:.8rem}
-footer a{color:var(--accent)}
+footer{max-width:var(--content-width);margin:0 auto;padding:48px 24px;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:.8rem}
+footer a{color:var(--cyan)}
+footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12px;flex-wrap:wrap}
+
+/* Section divider flourish */
+.section-break{text-align:center;margin:56px 0;color:var(--border);font-size:1.2rem;letter-spacing:1em}
 
 /* Responsive */
 @media(max-width:1200px){
   .toc-sidebar{display:none}
 }
 @media(max-width:768px){
-  .blog-header{padding:60px 20px 32px}
+  .blog-header{padding:70px 20px 40px}
+  .blog-header h1{font-size:1.8rem}
   article{padding:0 20px 60px}
   .stats-row{grid-template-columns:repeat(2,1fr)}
   .comp-grid{grid-template-columns:1fr}
+  .partner-grid{grid-template-columns:1fr}
   .bench-table{font-size:.75rem}
   .bench-table th,.bench-table td{padding:10px 10px}
+  .pull-quote{font-size:1rem;padding-left:20px}
+  .cta a.btn+a.btn{margin-left:0;margin-top:10px}
 }
 </style>
 </head>
@@ -127,311 +163,400 @@ footer a{color:var(--accent)}
 
 <nav class="toc-sidebar" id="toc-sidebar">
   <div class="toc-title">On this page</div>
-  <a href="#opening" data-section="opening">Opening</a>
-  <a href="#origin" data-section="origin">Why llm-d Exists</a>
-  <a href="#launch" data-section="launch">The Launch: May 2025</a>
-  <a href="#releases" data-section="releases">Release Deep Dive</a>
-  <a href="#benchmarks" data-section="benchmarks">Performance Benchmarks</a>
-  <a href="#landscape" data-section="landscape">Competitive Landscape</a>
-  <a href="#academic" data-section="academic">Academic Foundations</a>
-  <a href="#cncf" data-section="cncf">CNCF Sandbox</a>
-  <a href="#enterprise" data-section="enterprise">Enterprise Track</a>
-  <a href="#forward" data-section="forward">What v1.0 Looks Like</a>
-  <a href="#conclusion" data-section="conclusion">Conclusion</a>
+  <a href="#opening" data-section="opening">The Moment</a>
+  <a href="#problem" data-section="problem">The Problem Nobody Solved</a>
+  <a href="#launch" data-section="launch">The Day It Went Public</a>
+  <a href="#partners" data-section="partners">The All-Star Roster</a>
+  <a href="#rocket" data-section="rocket">The 1,000x Rocket</a>
+  <a href="#benchmarks" data-section="benchmarks">The Numbers</a>
+  <a href="#cncf" data-section="cncf">The Moment That Changed Everything</a>
+  <a href="#landscape" data-section="landscape">Where llm-d Fits</a>
+  <a href="#academic" data-section="academic">Standing on Giants</a>
+  <a href="#enterprise" data-section="enterprise">The Enterprise Story</a>
+  <a href="#forward" data-section="forward">What We're Building Next</a>
+  <a href="#closing" data-section="closing">Come Build This With Us</a>
 </nav>
 
 <div class="blog-header">
   <div class="tag">Year in Review</div>
-  <h1>llm-d: Thirteen Months That Reshaped Distributed LLM Inference</h1>
+  <h1>From a Summit Stage to the CNCF: The Story of 1,000x</h1>
+  <p class="subtitle">How a coalition of rivals built the routing brain for distributed LLM inference &mdash; and why the best is yet to come.</p>
   <div class="meta">
     <span>Markell Rawls</span>
     <span class="sep">|</span>
     <span>June 2026</span>
     <span class="sep">|</span>
-    <span>18 min read</span>
+    <span>~20 min read</span>
   </div>
-  <div class="word-count">~4,500 words</div>
 </div>
 
 <article>
 
-  <!-- Section 1: Opening -->
+  <!-- Section 1: The Opening Moment -->
   <section id="opening">
-    <p>May 2025. Red Hat Summit in Boston. The conference halls were filled with the usual buzz about Kubernetes operators, hybrid cloud strategies, and the latest OpenShift features. But this year, there was a different kind of energy in the air. The industry had been wrestling with a model-serving problem that was growing more acute by the month, and everyone in the room could feel it. vLLM had solved the single-node inference problem beautifully &mdash; PagedAttention was a genuine breakthrough, and serving a single large language model on a single GPU node was now efficient and well-understood. But that was never the real problem.</p>
+    <p class="lead">The room in Amsterdam went quiet for a beat too long.</p>
 
-    <p>The real problem was what happened next. Organizations didn't need to serve one model. They needed to serve <strong>dozens of models across hundreds of GPUs</strong>, with predictable latency, controllable cost, and the kind of operational reliability that enterprise SLAs demand. The gap between "it works on one box" and "it works in production at scale" was enormous &mdash; and it was a gap that no existing project was seriously addressing. Load balancers didn't understand KV caches. Kubernetes autoscalers didn't understand the difference between prefill and decode. Inference frameworks were optimized for throughput on a single node, not for fleet-level efficiency across a heterogeneous GPU cluster.</p>
+    <p>It was March 24, 2026. KubeCon Europe. Thousands of engineers packed into a convention hall that smelled like fresh carpet and stale conference coffee. The CNCF Technical Oversight Committee had just announced the latest batch of Sandbox acceptances. When the slide landed on <strong>llm-d</strong>, donated jointly by IBM Research, Red Hat, and Google Cloud, the reaction was not polite applause. It was the kind of murmur that ripples through a room when people realize they are witnessing a turning point.</p>
 
-    <p>llm-d was born to close that gap. Announced on that Summit stage by a coalition of companies that don't usually agree on anything, it proposed something audacious: a Kubernetes-native distributed inference framework that would make multi-model, multi-node, multi-accelerator LLM serving as natural as deploying a stateless web application. Thirteen months later, it is a CNCF Sandbox project with seven releases, thirteen-plus partners, and enterprise general availability status through Red Hat AI. This is the story of how it happened &mdash; told through the technical challenges, the people who solved them, and the ecosystem that formed around a shared vision for the future of AI inference infrastructure.</p>
+    <p>Ten months. That is how long it took llm-d to go from a conference announcement at Red Hat Summit to acceptance into the most important open-source foundation in cloud-native computing. Ten months from "here is an idea" to "this belongs alongside Kubernetes and Prometheus." For a project born at the intersection of AI and infrastructure &mdash; two fields known for hype and broken promises &mdash; the speed was almost disorienting.</p>
+
+    <p>But the people in that room knew why. They had felt the pain firsthand. They had watched their organizations bleed money on GPU clusters that sat half-idle because no one had built the intelligence layer between the models and the hardware. They had jury-rigged load balancers that did not understand KV caches, autoscalers that did not know a prefill from a decode, and monitoring dashboards that treated a 70-billion-parameter model the same as a REST API endpoint.</p>
+
+    <p>llm-d did not just solve a technical problem. It solved <em>their</em> problem. And in thirteen months, it went from solving it in theory to solving it at 50,000 tokens per second.</p>
+
+    <p>This is the story of how that happened.</p>
   </section>
 
-  <!-- Section 2: The Origin -->
-  <section id="origin">
-    <h2>The Origin: Why llm-d Exists</h2>
+  <div class="section-break">* * *</div>
 
-    <p>To understand why llm-d needed to exist, you need to understand four technical insights that were well-known in the research community by early 2025 but had not yet been synthesized into a cohesive infrastructure project.</p>
+  <!-- Section 2: The Problem -->
+  <section id="problem">
+    <h2>The Problem Nobody Was Solving</h2>
 
-    <h3>The KV Cache Routing Insight</h3>
+    <p>Here is something that drove infrastructure teams quietly insane throughout 2024 and early 2025: serving a single LLM on a single GPU was a solved problem. vLLM had cracked it. PagedAttention was a genuine breakthrough &mdash; elegant, effective, and widely adopted. If you needed to run Llama on one box and serve requests, you were in great shape.</p>
 
-    <p>Traditional load balancers &mdash; whether round-robin, least-connections, or even sophisticated weighted algorithms &mdash; treat all backend pods as interchangeable. For stateless web services, this is correct. For LLM inference, it is catastrophically wrong. Every LLM inference request builds a KV (key-value) cache as it processes the input prompt. This cache is the model's "working memory" for that conversation. When a request arrives at a pod that already has the relevant prefix cached from a previous request, the pod can <strong>skip the entire prefill computation</strong> &mdash; the most expensive phase of inference. Route that same request to a random pod, and you pay the full prefill cost again: every matrix multiplication, every attention computation, every layer of the transformer, re-executed from scratch.</p>
+    <p>But nobody needed to run one model on one box.</p>
 
-    <div class="callout insight">
-      <div class="callout-title">The Core Routing Insight</div>
-      <p>A KV cache hit on the right pod can reduce time-to-first-token by 80% or more. This means the routing decision &mdash; which pod handles which request &mdash; is not a load-balancing problem. It is a <strong>cache topology problem</strong>. The router needs to know what every pod has cached and make placement decisions accordingly. This single insight became the foundation of the Endpoint Picker (EPP), llm-d's routing brain.</p>
+    <p>Real organizations needed to serve <strong>dozens of models across hundreds of GPUs</strong>, with predictable latency, controllable costs, and the kind of operational reliability that lets you sleep through the night when your inference fleet is processing ten thousand concurrent requests. And for that problem &mdash; the production problem, the at-scale problem, the problem that actually costs money &mdash; the industry had nothing.</p>
+
+    <div class="pull-quote">
+      The gap between "it works on one box" and "it works in production at scale" was not a gap. It was a canyon. And every organization running LLMs at scale was building their own rickety bridge across it.
     </div>
 
-    <h3>The Prefill/Decode Asymmetry</h3>
+    <p>Think about what a load balancer sees when it routes an LLM inference request. It sees an HTTP request. It picks a backend pod. Round-robin, least-connections, maybe something weighted. The request lands on whichever pod was "next." For a stateless web service, this is fine.</p>
 
-    <p>LLM inference has two distinct computational phases, and they have fundamentally different hardware requirements. <strong>Prefill</strong> is compute-bound: it processes the entire input prompt in parallel, performing massive matrix multiplications across every layer of the model. It wants raw FLOPS &mdash; the more tensor cores, the better. <strong>Decode</strong> is memory-bandwidth-bound: it generates one token at a time, and for each token, it reads the entire KV cache from GPU memory. It wants high memory bandwidth and large memory capacity, not necessarily peak compute.</p>
+    <p>For LLM inference, it is catastrophic.</p>
 
-    <p>Running both phases on the same GPU is a compromise. During prefill, the GPU's memory bandwidth sits largely idle. During decode, the GPU's compute units sit largely idle. Disaggregating these phases &mdash; routing prefill to compute-optimized pods and decode to memory-optimized pods &mdash; was a known optimization, but nobody had built the infrastructure to do it automatically at fleet scale with efficient KV cache transfer between the pods.</p>
+    <p>Every LLM request builds a KV cache &mdash; the model's working memory for that conversation. When a request arrives at a pod that already has the relevant prefix cached from a previous request, the pod can <strong>skip the entire prefill computation</strong>. That is the most expensive phase of inference: every matrix multiplication, every attention computation, every layer of the transformer. A KV cache hit on the right pod can cut time-to-first-token by 80% or more. Route that same request to a random pod, and you pay the full cost again from scratch.</p>
 
-    <h3>The Multi-Model Problem</h3>
+    <p>This was not a load-balancing problem. It was a <strong>cache topology problem</strong>. And nobody's load balancer understood cache topology.</p>
 
-    <p>Enterprises don't serve one model. They serve Llama for general conversation, a fine-tuned CodeLlama for code generation, a Mistral variant for summarization, several LoRA adapters for domain-specific tasks, and maybe a DeepSeek model for reasoning-heavy workloads. Each model has different hardware requirements, different scaling characteristics, and different latency targets. LoRA adapters add another dimension: the same base model might serve dozens of adapters, and routing needs to consider which adapters are loaded on which pods. The routing layer needs to understand all of this &mdash; model families, adapter states, hardware capabilities, and workload characteristics &mdash; to make intelligent placement decisions.</p>
+    <p>It got worse. LLM inference has two distinct computational phases that want completely different hardware. <strong>Prefill</strong> is compute-bound &mdash; it wants raw FLOPS, tensor cores, peak throughput. <strong>Decode</strong> is memory-bandwidth-bound &mdash; it generates one token at a time and reads the entire KV cache for each one. Running both on the same GPU is a compromise where neither phase gets what it needs. During prefill, the memory bandwidth sits idle. During decode, the compute units sit idle.</p>
 
-    <h3>The Kubernetes-Native Imperative</h3>
+    <p>And then there was the multi-model problem. Enterprises do not serve one model. They serve Llama for conversation, CodeLlama for code generation, a Mistral variant for summarization, several LoRA adapters for domain-specific tasks, maybe DeepSeek for reasoning-heavy workloads. Each model has different hardware requirements, different scaling characteristics, different latency targets. LoRA adapters add yet another dimension: the same base model might serve dozens of adapters, and routing needs to know which adapters are loaded where.</p>
 
-    <p>The final insight was architectural: inference infrastructure should compose with existing cloud-native tooling, not require a parallel universe of custom infrastructure. Organizations had already invested heavily in Kubernetes, Gateway API, Prometheus, HPA, service mesh, and the entire CNCF ecosystem. An inference framework that required its own scheduling, its own monitoring, its own autoscaling, and its own networking was dead on arrival in enterprises that had standardized on Kubernetes. llm-d was designed from the start to be a Kubernetes-native citizen: Gateway API for ingress, Prometheus for metrics, HPA for scaling, standard container images, standard Helm charts, standard everything.</p>
+    <p>All of this needed to compose with Kubernetes. Not alongside it, not instead of it &mdash; <em>with</em> it. Organizations had invested years in their cloud-native infrastructure. Gateway API, Prometheus, HPA, service mesh. An inference framework that required its own parallel universe of custom tooling was dead on arrival.</p>
 
-    <h3>The Core Architecture</h3>
-
-    <p>These four insights crystallized into a core architecture centered on the <strong>EPP (Endpoint Picker)</strong>. The EPP is the routing brain of llm-d. It sits in the data path between the Gateway API and the inference pods, scoring each candidate pod based on multiple signals: KV cache match ratio (how much of the request's prefix is already cached), queue depth (how many requests are waiting), GPU utilization (how loaded the pod is), model and adapter state (which model and LoRA adapters are loaded), and health status (is the pod responsive and ready). The EPP makes a routing decision in microseconds, attaching a routing hint to the request that the Gateway API proxy uses to forward the traffic to the selected pod. It is lightweight, stateless in itself (it reads pod state from metrics endpoints), and designed to be the single point of intelligence in a system that is otherwise composed of standard Kubernetes primitives.</p>
+    <p>Four insights. Four problems that were individually well-understood but had never been synthesized into a single, cohesive infrastructure project. Until May 2025.</p>
   </section>
 
   <!-- Section 3: The Launch -->
   <section id="launch">
-    <h2>The Launch: May 2025</h2>
+    <h2>The Day It Went Public</h2>
 
-    <p>The Red Hat Summit announcement on May 20, 2025, was remarkable not for what was announced but for <strong>who announced it together</strong>. The founding coalition was unusually broad for an open-source infrastructure project.</p>
+    <p>Red Hat Summit. Boston. May 20, 2025. The announcement was remarkable not for what was announced but for <strong>who announced it together</strong>.</p>
+
+    <p>Red Hat, Google Cloud, IBM Research, CoreWeave, and NVIDIA stood on the same stage and said: we are building this together. These are companies that compete fiercely in the cloud and AI infrastructure markets. Their willingness to collaborate on a shared inference layer was the clearest possible signal that the problem was bigger than any one company's proprietary solution could address.</p>
 
     <div class="stats-row">
       <div class="s"><div class="n">5</div><div class="l">Core Partners</div></div>
-      <div class="s"><div class="n">8+</div><div class="l">Supporting Orgs</div></div>
-      <div class="s"><div class="n">2</div><div class="l">Universities</div></div>
-      <div class="s"><div class="n">1</div><div class="l">Day-One Enterprise GA Path</div></div>
+      <div class="s"><div class="n">13+</div><div class="l">Organizations</div></div>
+      <div class="s"><div class="n">2</div><div class="l">Research Universities</div></div>
+      <div class="s"><div class="n">Day 1</div><div class="l">Enterprise GA Path</div></div>
     </div>
 
-    <p><strong>Red Hat, Google Cloud, IBM Research, CoreWeave, and NVIDIA</strong> formed the core partnership. These are companies that compete fiercely in the cloud and AI infrastructure markets, and their willingness to collaborate on a shared inference layer signaled that the problem was bigger than any one company's proprietary solution could address. AMD, Cisco, Hugging Face, Intel, Lambda, and Mistral AI signed on as supporting organizations. UC Berkeley &mdash; the group behind vLLM and PagedAttention, led by Ion Stoica's lab &mdash; and the University of Chicago &mdash; the team behind LMCache and systematic prefix caching research &mdash; provided the academic research depth that gave the project its technical foundations.</p>
+    <p>AMD, Cisco, Hugging Face, Intel, Lambda, and Mistral AI signed on as supporting organizations. UC Berkeley &mdash; the group behind vLLM and PagedAttention, led by Ion Stoica's lab &mdash; and the University of Chicago &mdash; the team behind LMCache and systematic prefix caching research &mdash; provided the academic depth that gave the project its technical soul.</p>
+
+    <p>The first tagged release, v0.1.0, shipped within days of the announcement. Forty-five tokens per second on a baseline configuration. The number was almost irrelevant. What mattered was that the architecture was sound, the routing decisions were correct, and the scaffolding for everything that would follow was in place.</p>
+
+    <p>The release cadence that would define the next thirteen months had begun.</p>
 
     <div class="callout enterprise">
       <div class="callout-title">Upstream First, Enterprise Alongside</div>
-      <p>Most companies build internally first and open-source later, often years later, often with the most valuable pieces held back. Red Hat took a different approach with llm-d: they announced the <strong>Red Hat AI Inference Server</strong> &mdash; an enterprise productization built on vLLM + llm-d &mdash; simultaneously with the open-source project launch. This "upstream first, enterprise alongside" model meant that every feature would land in the open-source project before (or at the same time as) the enterprise product. It was a bet that open-source velocity would outpace proprietary development, and thirteen months later, that bet has paid off.</p>
+      <p>Most companies build internally first and open-source later &mdash; often years later, often with the best pieces held back. Red Hat took the opposite approach: the <strong>Red Hat AI Inference Server</strong> launched simultaneously with the open-source project. Every feature would land in the open-source project before or at the same time as the enterprise product. It was a bet that open-source velocity would outpace proprietary development. Thirteen months later, that bet has paid off handsomely.</p>
     </div>
-
-    <p>The first tagged release, v0.1.0, shipped within days of the Summit announcement. It was modest in scope &mdash; basic inference routing, the EPP foundation, Gateway API integration, and a health-check sidecar &mdash; but the architecture was sound. Performance was approximately 45 tokens per second on a baseline configuration, nowhere near production numbers. But the scaffolding was in place, and the release cadence that would define the project's trajectory had begun.</p>
   </section>
 
-  <!-- Section 4: Release Deep Dive -->
-  <section id="releases">
-    <h2>The Release Cadence: Deep Dive into Each Version</h2>
+  <!-- Section 4: The All-Star Roster -->
+  <section id="partners">
+    <h2>The All-Star Roster</h2>
 
-    <p>Seven releases in thirteen months. Each one built on the previous, each one addressing the next bottleneck in the journey from single-node prototype to fleet-scale production system. The trajectory tells a story of a project that knew where it was going and executed relentlessly.</p>
+    <p>Building infrastructure that the entire industry trusts requires more than good code. It requires the right people in the room. Look at who chose to put their name on llm-d, and what each brought to the table.</p>
 
-    <h3>v0.1 (May 2025) &mdash; Foundation</h3>
+    <div class="partner-grid">
+      <div class="partner-item">
+        <div class="partner-name">Red Hat</div>
+        <div class="partner-role">Kubernetes-native architecture. Enterprise productization. Decades of open-source governance expertise.</div>
+      </div>
+      <div class="partner-item">
+        <div class="partner-name">IBM Research</div>
+        <div class="partner-role">Deep inference optimization research. CNCF donation co-sponsor. Production validation at enterprise scale.</div>
+      </div>
+      <div class="partner-item">
+        <div class="partner-name">Google Cloud</div>
+        <div class="partner-role">TPU support. Cloud-scale architecture validation. CNCF donation co-sponsor.</div>
+      </div>
+      <div class="partner-item">
+        <div class="partner-name">NVIDIA</div>
+        <div class="partner-role">NIXL interconnect integration. Dynamo runtime collaboration. The hardware ecosystem.</div>
+      </div>
+      <div class="partner-item">
+        <div class="partner-name">CoreWeave</div>
+        <div class="partner-role">GPU cloud infrastructure. Real-world scale testing on massive GPU clusters.</div>
+      </div>
+      <div class="partner-item">
+        <div class="partner-name">UC Berkeley</div>
+        <div class="partner-role">vLLM and PagedAttention. The inference engine at the heart of every llm-d pod.</div>
+      </div>
+      <div class="partner-item">
+        <div class="partner-name">University of Chicago</div>
+        <div class="partner-role">LMCache research. The prefix caching science behind cache-aware routing.</div>
+      </div>
+      <div class="partner-item">
+        <div class="partner-name">AMD</div>
+        <div class="partner-role">MI300X accelerator support. Multi-vendor hardware story.</div>
+      </div>
+      <div class="partner-item">
+        <div class="partner-name">Hugging Face</div>
+        <div class="partner-role">Model ecosystem integration. The bridge to the open model community.</div>
+      </div>
+      <div class="partner-item">
+        <div class="partner-name">Intel</div>
+        <div class="partner-role">Gaudi accelerator support. XPU cross-platform validation.</div>
+      </div>
+      <div class="partner-item">
+        <div class="partner-name">Cisco</div>
+        <div class="partner-role">Networking infrastructure expertise. Enterprise deployment patterns.</div>
+      </div>
+      <div class="partner-item">
+        <div class="partner-name">Lambda &amp; Mistral AI</div>
+        <div class="partner-role">GPU cloud and frontier model validation, respectively. Proving the stack at the edges.</div>
+      </div>
+    </div>
 
-    <p>The first release was about proving the architecture. The core EPP scoring algorithm shipped in its initial form: a weighted combination of KV cache affinity, queue depth, and pod health. Gateway API integration established the pattern that would carry through every subsequent release &mdash; llm-d would be a Gateway API extension, not a replacement. The health-check sidecar provided the liveness and readiness signals that Kubernetes needed to manage inference pods correctly. Throughput sat at approximately <strong>45 tokens per second</strong> on a single-pod deployment. The number was almost irrelevant; what mattered was that the control plane worked, the routing decisions were correct, and the architecture could scale. The "it compiles and routes correctly" release.</p>
+    <p>This was not a marketing exercise. Every one of these organizations contributed engineering hours, code, or research. When you see a roster like this aligned behind a single open-source project, it tells you something about the size of the problem being solved.</p>
+  </section>
 
-    <h3>v0.2 "First Well-Lit Paths" (July 2025) &mdash; The Thesis Proven</h3>
+  <div class="section-break">* * *</div>
 
-    <p>v0.2 was the release that turned llm-d from an interesting architecture into a performance story. Three major features shipped simultaneously, and each one attacked a different bottleneck.</p>
+  <!-- Section 5: The 1,000x Rocket -->
+  <section id="rocket">
+    <h2>The 1,000x Rocket Ship</h2>
 
-    <p><strong>Prefix-cache-aware scheduling</strong> was the headline. The EPP now scored pods based on how much of the incoming request's prefix was already present in the pod's KV cache. A pod with 90% of the prefix cached would score dramatically higher than a pod with 0%. In practice, this meant that sequential requests from the same user, or requests that shared system prompts and few-shot examples, would consistently route to pods that could serve them with minimal prefill. Cache hit rates above 80% became routine for workloads with common prefixes.</p>
+    <p>Seven releases in thirteen months. Each one attacked the next bottleneck. Each one compounded on the last. The trajectory did not feel like incremental improvement. It felt like ignition.</p>
 
-    <p><strong>Prefill/decode disaggregation</strong> landed in the same release. Separate pod pools for prefill (compute-optimized) and decode (memory-optimized), with KV cache transfer between them managed by a new pd-sidecar container. The handoff was transparent to the client &mdash; a request hit the EPP, got routed to a prefill pod, completed prefill, had its KV cache transferred to a decode pod, and began generating tokens, all without the client knowing that two different pods were involved.</p>
+    <h3>v0.1 (May 2025) &mdash; Ignition</h3>
 
-    <p><strong>MoE (Mixture of Experts) support</strong> arrived with DeepSeek-R1, including expert parallelism that distributed different experts across different GPUs. This was a signal that llm-d was thinking ahead &mdash; MoE models were becoming the dominant architecture for frontier models, and supporting them natively was essential.</p>
+    <p>The first release proved the architecture could work. The core EPP (Endpoint Picker) scoring algorithm shipped in its initial form: a weighted combination of KV cache affinity, queue depth, and pod health. Gateway API integration established the pattern that would carry through every subsequent release &mdash; llm-d would extend Kubernetes, not replace it. The health-check sidecar gave Kubernetes the signals it needed to manage inference pods correctly.</p>
 
-    <p>The "Well-Lit Paths" naming was deliberate philosophy, not marketing. Each "path" was a tested, validated, opinionated deployment pattern: single-node inference, disaggregated prefill/decode, multi-node MoE. Users picked a path, not a pile of configuration knobs. Throughput jumped to approximately <strong>200 tokens per second</strong> with prefix caching and disaggregation active.</p>
+    <p><strong>Forty-five tokens per second.</strong> Modest. But the routing decisions were correct, the control plane worked, and the architecture could scale. This was the "it compiles and routes correctly" release. The foundation was poured.</p>
 
-    <h3>v0.3 "Wider Well-Lit Paths" (October 2025) &mdash; Going Cross-Platform</h3>
+    <h3>v0.2 "First Well-Lit Paths" (July 2025) &mdash; The Thesis Proved</h3>
 
-    <p>v0.3 was the release that proved llm-d was not just an NVIDIA story. Three developments made this clear.</p>
+    <p>Two months later, v0.2 turned llm-d from an interesting architecture into a performance story. Three breakthroughs shipped simultaneously, each attacking a different bottleneck.</p>
 
-    <p><strong>Inference Gateway v1.0 GA</strong> brought the gateway component to production readiness. This was the production-hardened ingress layer that sat in front of the EPP, handling TLS termination, rate limiting, and the Gateway API protocol translation that made llm-d composable with any Kubernetes environment.</p>
+    <p><strong>Prefix-cache-aware scheduling.</strong> The EPP now scored pods based on how much of the incoming request's prefix was already cached. A pod with 90% of the prefix cached scored dramatically higher than one starting cold. Sequential requests from the same user, or requests sharing system prompts and few-shot examples, consistently hit pods that could skip most of prefill. Cache hit rates above 80% became routine.</p>
 
-    <p><strong>Cross-platform hardware support</strong> expanded to Intel XPU (Gaudi accelerators) and Google TPU alongside NVIDIA GPUs. This was a significant engineering effort &mdash; the EPP's scoring algorithm, the health-check sidecar, and the disaggregation logic all needed to work correctly on hardware with very different memory architectures, compute characteristics, and driver stacks. But it was essential: enterprises choosing llm-d needed to know they were not locked into a single hardware vendor.</p>
+    <p><strong>Prefill/decode disaggregation.</strong> Separate pod pools for each phase. Compute-optimized pods for prefill. Memory-optimized pods for decode. A new pd-sidecar container managed KV cache transfer between them. The handoff was invisible to the client &mdash; a request hit the EPP, got routed to a prefill pod, completed prefill, had its KV cache transferred to a decode pod, and started generating tokens. Two pods, one seamless experience.</p>
 
-    <p><strong>NIXL integration</strong> brought NVIDIA's Interconnect Library into the disaggregation story. NIXL enabled fast, low-latency KV cache transfer between prefill and decode pods using RDMA and NVLink where available. This was the piece that made disaggregation practical at scale &mdash; without fast cache transfer, the latency penalty of moving KV state between pods would have negated the throughput benefit of running each phase on optimized hardware.</p>
+    <p><strong>MoE (Mixture of Experts) support</strong> arrived with DeepSeek-R1, including expert parallelism across GPUs. MoE models were becoming the dominant architecture for frontier models, and llm-d was ready.</p>
 
-    <p><strong>Wide-EP (Expert Parallelism across nodes)</strong> enabled expert parallelism to span multiple nodes, not just multiple GPUs within a node. On H200 clusters, this delivered <strong>2,200 tokens per second per GPU</strong> &mdash; a 10x improvement over v0.2. The architecture was scaling.</p>
+    <p>The "Well-Lit Paths" name was deliberate philosophy. Each "path" was a tested, validated deployment pattern: single-node inference, disaggregated prefill/decode, multi-node MoE. Pick a path, not a pile of configuration knobs.</p>
 
-    <h3>v0.4 (December 2025) &mdash; Latency Breakthrough</h3>
+    <div class="pull-quote">
+      From 45 tokens per second to 200. A 4.4x jump in two months. But we were just getting started.
+    </div>
 
-    <p>v0.4 was a latency-focused release. The headline was a <strong>40% reduction in per-output-token latency</strong> for DeepSeek V3.1 on H200 hardware. This came from a combination of optimizations: better scheduling to reduce queue wait time, more efficient KV cache transfer, and improved decode-phase batching.</p>
+    <h3>v0.3 "Wider Well-Lit Paths" (October 2025) &mdash; Breaking Free</h3>
 
-    <p><strong>Speculative decoding</strong> shipped in this release. A smaller draft model generates candidate tokens, and the main model verifies them in parallel. When the draft model's predictions are correct (which happens frequently for predictable text), multiple tokens can be confirmed in a single forward pass. This is a well-known technique, but integrating it into the distributed routing framework &mdash; where the draft model and main model might be on different pods &mdash; required careful engineering.</p>
+    <p>v0.3 was the release that proved llm-d was not just an NVIDIA story.</p>
 
-    <p><strong>CPU memory tiering</strong> for prefix cache offload addressed the problem of GPU memory exhaustion. When a pod's GPU memory filled up with cached prefixes, the least-recently-used cache entries could now be offloaded to CPU memory rather than evicted entirely. This preserved cache entries that might be needed again soon, at the cost of slightly higher retrieval latency. For workloads with many distinct prefixes, this significantly improved cache hit rates. TPU and Intel XPU disaggregation support also expanded in this release.</p>
+    <p><strong>Cross-platform hardware support</strong> expanded to Intel XPU (Gaudi accelerators) and Google TPU alongside NVIDIA GPUs. This was a significant engineering effort &mdash; the EPP, the health-check sidecar, and the disaggregation logic all needed to work across hardware with fundamentally different memory architectures, compute characteristics, and driver stacks. But it was essential. Enterprises choosing llm-d needed to know they were not locked into a single vendor.</p>
 
-    <h3>v0.5 "Sustaining Performance at Scale" (February 2026) &mdash; The Scale Release</h3>
+    <p><strong>NIXL integration</strong> brought NVIDIA's Interconnect Library into the disaggregation story, enabling high-performance KV cache transfer using RDMA and NVLink where available. This was the piece that made disaggregation practical at production latency targets &mdash; without fast cache transfer, the overhead would have negated the benefit.</p>
 
-    <p>v0.5 was the release that answered the question: "Does this architecture actually work at scale?" The answer was emphatic.</p>
+    <p><strong>Wide expert parallelism across nodes</strong> pushed MoE serving past the single-node boundary. On H200 clusters, this delivered <strong>2,200 tokens per second per GPU</strong>. An 11x improvement over v0.2.</p>
 
-    <p><strong>Hierarchical KV offloading</strong> extended the v0.4 CPU tiering into a full three-tier hierarchy: GPU memory (hot), CPU memory (warm), and disk (cold). This prevented the "cache eviction storms" that plagued large deployments &mdash; when GPU memory filled up and multiple cache entries were evicted simultaneously, causing a cascade of cache misses and prefill recomputations. With three tiers, the system could gracefully degrade rather than cliff-edge.</p>
+    <p>The <strong>Inference Gateway reached v1.0 GA</strong>, providing a production-hardened ingress layer with TLS termination, rate limiting, and Gateway API protocol translation.</p>
 
-    <p><strong>Cache-aware LoRA routing</strong> solved the multi-adapter problem. The EPP now tracked which LoRA adapters were loaded on which pods and routed requests to pods that had the correct adapter already in memory. Loading a LoRA adapter is fast (seconds), but at scale, the difference between routing to a pod with the adapter loaded versus one that needs to load it was the difference between meeting and missing latency SLAs.</p>
+    <h3>v0.4 (December 2025) &mdash; The Latency Breakthrough</h3>
 
-    <p><strong>Active-active high availability</strong> eliminated single points of failure. Multiple EPP instances could run simultaneously, sharing state through a lightweight coordination protocol. If one EPP went down, the others continued routing without interruption.</p>
+    <p>v0.4 went after latency. A <strong>40% reduction in per-output-token latency</strong> for DeepSeek V3.1 on H200 hardware, driven by better scheduling, more efficient cache transfer, and improved decode batching.</p>
 
-    <p><strong>Scale-to-zero</strong> autoscaling cut costs for bursty workloads. Pods for infrequently-used models could scale to zero replicas and spin up on demand when requests arrived. This was particularly valuable for enterprises serving many models with uneven traffic patterns.</p>
+    <p><strong>Speculative decoding</strong> shipped: a smaller draft model generates candidate tokens, and the main model verifies them in parallel. When predictions are correct &mdash; which happens frequently for predictable text &mdash; multiple tokens get confirmed in a single forward pass. Integrating this into the distributed routing framework, where the draft and main models might live on different pods, required careful engineering.</p>
 
-    <p>The benchmark numbers told the story. On a 16x16 B200 topology (16 prefill GPUs, 16 decode GPUs), llm-d sustained approximately <strong>50,000 output tokens per second</strong>, or roughly 3,100 tokens per second per decode GPU. From 45 tok/s in v0.1 to 50,000 tok/s in v0.5 &mdash; a <strong>1,000x improvement</strong> in nine months.</p>
+    <p><strong>CPU memory tiering</strong> for prefix cache offload meant that when GPU memory filled up, least-recently-used cache entries moved to CPU memory instead of being evicted. This preserved reusable cache state and significantly improved hit rates for workloads with many distinct prefixes. TPU and Intel XPU disaggregation support also expanded.</p>
+
+    <h3>v0.5 "Sustaining Performance at Scale" (February 2026) &mdash; Liftoff</h3>
+
+    <p>This was the release that answered the only question that mattered: <strong>does this architecture actually work at scale?</strong></p>
+
+    <p>The answer was emphatic.</p>
+
+    <p><strong>Hierarchical KV offloading</strong> extended CPU tiering into a full three-tier hierarchy: GPU memory (hot), CPU memory (warm), disk (cold). This prevented "cache eviction storms" &mdash; cascading cache misses when GPU memory fills up &mdash; by allowing graceful degradation instead of cliff-edge failures.</p>
+
+    <p><strong>Cache-aware LoRA routing</strong> solved the multi-adapter problem. The EPP tracked which adapters were loaded on which pods, routing requests to pods with the correct adapter already in memory. At scale, this was the difference between meeting and missing latency SLAs.</p>
+
+    <p><strong>Active-active high availability</strong> eliminated single points of failure. Multiple EPP instances running simultaneously, sharing state through lightweight coordination. <strong>Scale-to-zero autoscaling</strong> cut costs for bursty workloads &mdash; pods for infrequently-used models could scale to zero and spin up on demand.</p>
+
+    <div class="pull-quote">
+      On a 16x16 B200 topology, llm-d sustained 50,000 output tokens per second. From 45 tok/s in May to 50,000 tok/s in February. A thousand-fold improvement in nine months.
+    </div>
 
     <h3>v0.7 (June 2026) &mdash; Maturity</h3>
 
-    <p>After the performance fireworks of v0.5, v0.7 was deliberately quieter. The focus shifted from peak performance to <strong>operational maturity</strong> &mdash; the kind of work that doesn't make for exciting benchmarks but makes the difference between a project that experts can run and a project that teams can adopt.</p>
-
-    <p><strong>CUDA 13.0.2 upgrade</strong> brought the latest NVIDIA toolkit support. <strong>Standalone mode became the default deployment pattern</strong>, eliminating the dependency on external orchestrator components for simple deployments. A new user could now go from "git clone" to "running inference" with fewer moving parts. The <strong>documentation overhaul</strong> treated docs as a first-class feature, not an afterthought. <strong>CI coverage expansion</strong> closed gaps in automated testing. The project was optimizing for the new user's first hour, not just the expert's peak throughput &mdash; a sign that llm-d was transitioning from "impressive technology" to "reliable infrastructure."</p>
+    <p>After the performance fireworks of v0.5, the team made a deliberate choice: v0.7 was about operational maturity. CUDA 13.0.2 support. Standalone mode as the default deployment pattern. A documentation overhaul that treated docs as a first-class feature. CI coverage expansion. The project was optimizing for a new user's first hour, not just an expert's peak throughput &mdash; a sign that llm-d was transitioning from impressive technology to reliable infrastructure.</p>
   </section>
 
-  <!-- Section 5: Performance Benchmarks -->
+  <!-- Section 6: Benchmarks -->
   <section id="benchmarks">
-    <h2>Performance Benchmarks: From 45 to 50,000 Tokens Per Second</h2>
+    <h2>The Numbers: From 45 to 50,000</h2>
 
-    <p>The performance trajectory across llm-d's releases tells the story of a project systematically attacking every bottleneck in the distributed inference pipeline. Each jump came from a different optimization, and the compounding effect was dramatic.</p>
+    <p>I could list the numbers in a sentence, but they deserve context. Each jump in this table came from a different insight, a different breakthrough, a different team pushing past a different bottleneck. The compounding effect is what makes this story extraordinary.</p>
 
     <table class="bench-table">
       <thead>
         <tr>
           <th>Version</th>
           <th>Throughput</th>
-          <th>Key Optimization</th>
+          <th>What Unlocked It</th>
           <th>Hardware</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><strong>v0.1</strong> (May 2025)</td>
+          <td><strong>v0.1</strong> (May '25)</td>
           <td><span class="throughput">~45 tok/s</span></td>
           <td>Baseline EPP routing, Gateway API integration</td>
           <td>Single pod, single GPU</td>
         </tr>
         <tr>
-          <td><strong>v0.2</strong> (Jul 2025)</td>
+          <td><strong>v0.2</strong> (Jul '25)</td>
           <td><span class="throughput">~200 tok/s</span><br><span class="improvement">4.4x vs v0.1</span></td>
           <td>Prefix-cache-aware scheduling, P/D disaggregation</td>
           <td>Multi-pod, NVIDIA GPUs</td>
         </tr>
         <tr>
-          <td><strong>v0.3</strong> (Oct 2025)</td>
+          <td><strong>v0.3</strong> (Oct '25)</td>
           <td><span class="throughput">~2,200 tok/s/GPU</span><br><span class="improvement">11x vs v0.2</span></td>
           <td>Wide-EP across nodes, NIXL KV cache transfer</td>
           <td>H200 clusters, multi-node</td>
         </tr>
         <tr>
-          <td><strong>v0.4</strong> (Dec 2025)</td>
+          <td><strong>v0.4</strong> (Dec '25)</td>
           <td><span class="throughput">~3,500 tok/s</span><br><span class="improvement">40% latency reduction</span></td>
           <td>Speculative decoding, CPU memory tiering</td>
           <td>H200, Intel XPU, Google TPU</td>
         </tr>
         <tr>
-          <td><strong>v0.5</strong> (Feb 2026)</td>
+          <td><strong>v0.5</strong> (Feb '26)</td>
           <td><span class="throughput">~50,000 tok/s</span><br><span class="improvement">~3.1k tok/s per decode GPU</span></td>
           <td>Hierarchical KV offloading, LoRA routing, HA, scale-to-zero</td>
           <td>16x16 B200 topology</td>
         </tr>
         <tr>
-          <td><strong>v0.7</strong> (Jun 2026)</td>
-          <td><span class="throughput">~50,000 tok/s</span><br><span class="improvement">Maintained with improved stability</span></td>
+          <td><strong>v0.7</strong> (Jun '26)</td>
+          <td><span class="throughput">~50,000 tok/s</span><br><span class="improvement">Maintained + improved stability</span></td>
           <td>Standalone mode, CI hardening, documentation</td>
           <td>B200, H200, XPU, TPU</td>
         </tr>
       </tbody>
     </table>
 
-    <p>The roughly <strong>1,000x improvement from v0.1 to v0.5</strong> did not come from a single breakthrough. It came from three compounding sources.</p>
+    <p>The 1,000x improvement did not come from a single eureka moment. It came from three forces compounding on each other:</p>
 
-    <p><strong>Better routing (cache hits).</strong> Prefix-cache-aware scheduling meant that the system did less redundant work. Every cache hit saved a full prefill computation. At 80%+ hit rates, this alone delivered a 3-5x effective throughput improvement on prefill-heavy workloads.</p>
+    <p><strong>Better routing (cache hits).</strong> Prefix-cache-aware scheduling eliminated redundant work. Every cache hit saved a full prefill computation. At 80%+ hit rates, this alone delivered 3-5x effective throughput improvement on prefill-heavy workloads.</p>
 
-    <p><strong>Disaggregation (hardware-optimal workloads).</strong> Running prefill on compute-optimized pods and decode on memory-optimized pods meant each GPU spent more of its time doing useful work. Prefill pods could saturate their tensor cores. Decode pods could saturate their memory bandwidth. Neither sat idle waiting for the other phase to finish.</p>
+    <p><strong>Disaggregation (hardware-optimal workloads).</strong> Prefill on compute-optimized pods. Decode on memory-optimized pods. Each GPU spending its time doing what it does best, not sitting idle waiting for the other phase to finish.</p>
 
-    <p><strong>Scale-out (more GPUs with efficient utilization).</strong> Wide expert parallelism across nodes, combined with NIXL's fast KV cache transfer, meant that adding more GPUs actually delivered near-linear throughput scaling rather than diminishing returns. The 16x16 B200 topology in v0.5 achieved roughly 3,100 tok/s per decode GPU, meaning that utilization efficiency remained high even at 32-GPU scale.</p>
+    <p><strong>Scale-out (more GPUs, efficiently).</strong> Wide expert parallelism plus NIXL's fast cache transfer meant that adding GPUs delivered near-linear throughput scaling instead of diminishing returns. The 16x16 B200 topology achieved roughly 3,100 tok/s per decode GPU &mdash; utilization efficiency remained high even at 32-GPU scale.</p>
 
-    <p>The combination of these three factors is what makes distributed inference optimization qualitatively different from single-node optimization. Single-node work has a ceiling defined by the hardware. Distributed optimization has a much higher ceiling, but only if the coordination overhead is low enough that adding nodes actually helps. llm-d's architecture &mdash; lightweight EPP routing, efficient cache transfer, hardware-aware scheduling &mdash; kept that overhead low.</p>
+    <p>This is what makes distributed inference optimization qualitatively different from single-node work. Single-node optimization has a ceiling defined by the silicon. Distributed optimization has a much higher ceiling &mdash; but only if the coordination overhead is low enough that adding nodes actually helps. llm-d's architecture kept that overhead low enough to ride the curve.</p>
   </section>
 
-  <!-- Section 6: Competitive Landscape -->
-  <section id="landscape">
-    <h2>Competitive Landscape</h2>
+  <div class="section-break">* * *</div>
 
-    <p>llm-d does not exist in a vacuum. The distributed inference space has attracted serious engineering effort from multiple directions, and understanding where llm-d fits requires understanding what the alternatives do and don't do.</p>
-
-    <h3>NVIDIA Dynamo</h3>
-
-    <p>Dynamo is NVIDIA's own distributed inference framework, and it is the most frequently compared project. Dynamo focuses on the <strong>execution and runtime layer</strong>: optimizing how inference computations are scheduled and executed across NVIDIA GPUs, with deep integration into NVIDIA's hardware stack (NVLink, NVSwitch, CUDA graphs). llm-d focuses on the <strong>routing and orchestration layer</strong>: deciding which pod handles which request, managing KV cache topology, and integrating with Kubernetes-native infrastructure.</p>
-
-    <p>In March 2026, NVIDIA announced a formal Dynamo integration with llm-d. This was a significant signal of ecosystem maturity &mdash; the two projects are complementary, not competitive. Dynamo optimizes execution within a node or tightly-coupled node group. llm-d optimizes placement and routing across the fleet. A production deployment can use both: Dynamo for execution efficiency, llm-d for fleet-level orchestration. The fact that NVIDIA chose to integrate rather than compete suggests that the routing/orchestration layer is genuinely a different problem from the execution/runtime layer.</p>
-
-    <h3>TensorRT-LLM</h3>
-
-    <p>NVIDIA's TensorRT-LLM is an inference optimization library that compiles models into highly optimized execution plans for NVIDIA GPUs. It operates at a fundamentally different level of the stack than llm-d. TensorRT-LLM optimizes how a single model runs on a single node (or tightly coupled multi-GPU node). llm-d uses vLLM as its inference engine, and vLLM can in turn use TensorRT-LLM as a backend for execution. The two are layered, not competing: TensorRT-LLM makes each individual inference faster, llm-d ensures that the right inference happens on the right hardware with the right cached state.</p>
-
-    <h3>SGLang</h3>
-
-    <p>SGLang is a programming framework for LLM applications that also includes a serving runtime. Its strengths are in structured generation (constraining outputs to match schemas), the programming model (composing LLM calls like function calls), and co-optimization of the programming model with the serving runtime. llm-d and SGLang solve different problems: SGLang optimizes how you write LLM applications and how individual requests are served. llm-d optimizes how a fleet of inference pods handles many concurrent requests across many models. llm-d is engine-agnostic in principle &mdash; the EPP routes to pods regardless of what inference engine runs inside them &mdash; so a future integration where SGLang serves as the engine inside llm-d-managed pods is architecturally possible.</p>
-
-    <h3>Ray Serve</h3>
-
-    <p>Ray Serve is a general-purpose model serving framework built on the Ray distributed computing library. Its strengths are multi-model serving, autoscaling, and the ability to compose arbitrary Python-based model pipelines. However, Ray Serve is general-purpose by design. It does not have LLM-specific optimizations like KV cache-aware routing, prefill/decode disaggregation, or LoRA adapter tracking. For LLM inference specifically, llm-d's purpose-built architecture delivers optimizations that a general-purpose framework cannot match without essentially reimplementing llm-d's routing logic. Ray Serve remains a strong choice for non-LLM model serving or for heterogeneous pipelines that mix LLMs with other model types.</p>
-
-    <div class="callout insight">
-      <div class="callout-title">The Ecosystem Is Layering, Not Consolidating</div>
-      <p>The key insight from the competitive landscape is that the inference stack is <strong>layering</strong>, not consolidating. Execution engines (TensorRT-LLM, vLLM), programming frameworks (SGLang), runtime orchestration (Dynamo), fleet routing (llm-d), and general-purpose serving (Ray Serve) are settling into distinct layers. The winners will be projects that play well with others, not projects that try to own the entire stack. llm-d's Kubernetes-native, engine-agnostic design positions it well in this layered world.</p>
-    </div>
-  </section>
-
-  <!-- Section 7: Academic Foundations -->
-  <section id="academic">
-    <h2>Academic Foundations</h2>
-
-    <p>llm-d's technical innovations did not emerge from thin air. They built on a body of academic research that provided the theoretical foundations and initial implementations for the key techniques the project relies on. Understanding these foundations is essential to understanding why llm-d's architecture works.</p>
-
-    <h3>vLLM and PagedAttention (UC Berkeley)</h3>
-
-    <p>The breakthrough that made modern LLM serving practical was <strong>PagedAttention</strong>, introduced by Woosuk Kwon, Zhuohan Li, Sicheng Lin, and others in the UC Berkeley group led by Ion Stoica. PagedAttention treats the KV cache like virtual memory, with paging. Instead of pre-allocating contiguous memory blocks for each request's cache (which leads to severe memory fragmentation and waste), PagedAttention allocates cache memory in small, non-contiguous blocks and manages them with a page table, exactly like an operating system manages virtual memory.</p>
-
-    <p>This was transformative. Memory utilization went from 50-60% (due to fragmentation in contiguous allocation schemes) to 95%+ with PagedAttention. More efficient memory use meant more requests could be served concurrently, which meant higher throughput. vLLM &mdash; the inference engine built around PagedAttention &mdash; became the de facto standard for LLM serving, and it is the engine that runs inside each llm-d inference pod. The UC Berkeley team are founding partners of llm-d, ensuring that the engine and the orchestration layer evolve together.</p>
-
-    <h3>LMCache and Prefix Caching Research (University of Chicago)</h3>
-
-    <p>The University of Chicago's LMCache project introduced <strong>systematic prefix caching</strong> for LLM inference. The insight was deceptively simple: many LLM requests share common prefixes. Every request to a customer-service chatbot shares the same system prompt. Every request using few-shot prompting shares the same examples. Every request in a multi-turn conversation shares the entire conversation history up to that point.</p>
-
-    <p>LMCache showed that by caching the KV state for these shared prefixes and reusing it across requests, you could eliminate redundant computation for the shared portions. This research directly informed llm-d's cache-aware routing strategy: the EPP does not just know whether a pod has cache; it knows <strong>which specific prefixes</strong> a pod has cached and scores pods based on the match ratio between the incoming request's prefix and the pod's cached state. The University of Chicago team are founding partners of llm-d.</p>
-
-    <h3>NIXL (NVIDIA)</h3>
-
-    <p>NVIDIA's Interconnect Library (NIXL) provides <strong>high-performance memory transfer</strong> between GPU and CPU memory, between GPUs on different nodes, and across different interconnect fabrics (NVLink, InfiniBand, PCIe, RDMA). For llm-d, NIXL is the critical enabler of practical prefill/decode disaggregation. When a prefill pod completes processing a request and needs to transfer the KV cache to a decode pod, that transfer needs to happen at microsecond latency and multi-gigabyte-per-second bandwidth. NIXL provides both, using whatever the fastest available interconnect is. Without NIXL (or something like it), the cache transfer latency would dominate the disaggregation benefit, making the technique impractical. The NIXL integration in v0.3 was the release that made disaggregation work at production latency targets.</p>
-  </section>
-
-  <!-- Section 8: CNCF Sandbox -->
-  <section id="cncf">
-    <h2>Governance: CNCF Sandbox</h2>
+  <!-- Section 7: CNCF — The Moment That Changed Everything -->
+  <section id="cncf" class="cncf-section">
+    <h2>The Moment That Changed Everything</h2>
 
     <div class="callout cncf">
       <div class="callout-title">March 24, 2026 &mdash; KubeCon Europe, Amsterdam</div>
       <p>llm-d is accepted into the CNCF Sandbox. Donated by IBM Research, Red Hat, and Google Cloud. The Technical Oversight Committee votes to accept, establishing llm-d as a vendor-neutral project with a path toward becoming a foundational piece of the cloud-native AI infrastructure stack.</p>
     </div>
 
-    <p>The Cloud Native Computing Foundation (CNCF) Sandbox is the entry point for early-stage projects that solve real problems for the cloud-native ecosystem. It is not a rubber stamp. Projects must demonstrate multiple contributors from different organizations, genuine community momentum, and a clear fit within the cloud-native landscape. The CNCF Technical Oversight Committee (TOC) evaluates each application and votes on acceptance.</p>
+    <p>Let me be direct about what this meant.</p>
 
-    <p>For llm-d, Sandbox acceptance meant several concrete things.</p>
+    <p>CNCF Sandbox acceptance is not a rubber stamp. Projects must demonstrate contributors from multiple organizations, genuine community momentum, and a clear fit within the cloud-native landscape. The Technical Oversight Committee evaluates each application and votes. Plenty of projects apply. Not all get in.</p>
 
-    <p><strong>Vendor-neutral governance.</strong> No single company controls the roadmap. IBM Research, Red Hat, and Google Cloud each donated intellectual property and engineering resources, but the project's direction is now governed by the contributor community, not by any one company's product roadmap. This is not a theoretical protection &mdash; it is the structural guarantee that prevents the "rug pull" scenario where a dominant vendor steers the project to serve its own interests at the community's expense.</p>
+    <p>For llm-d, getting in meant the project had crossed a threshold from "promising technology backed by big-name sponsors" to <strong>"infrastructure the cloud-native ecosystem considers essential."</strong> The company that sits next to you on the CNCF landscape? That is Kubernetes. Prometheus. Envoy. Containerd. You do not get listed alongside those projects unless the TOC believes you are solving a problem at that level of importance.</p>
 
-    <p><strong>CNCF infrastructure.</strong> Sandbox projects receive access to CNCF's CI infrastructure, security audit programs, trademark protection, and the visibility that comes with being listed alongside Kubernetes, Prometheus, Envoy, and the rest of the CNCF landscape. For a project like llm-d that aims to be infrastructure, this credibility matters enormously for enterprise adoption.</p>
+    <div class="pull-quote">
+      Ten months from announcement to CNCF Sandbox. Among the fastest paths in recent memory for a project of this scope. And the clock is already ticking toward Incubating.
+    </div>
 
-    <p><strong>A path forward.</strong> The CNCF graduation path goes from Sandbox to Incubating to Graduated. Incubating status requires demonstrated production adoption, robust governance documentation, and completion of a security audit. Graduated status (the level Kubernetes, Prometheus, and Envoy hold) requires broad adoption and a proven governance model. For llm-d, the Sandbox acceptance is the starting line, not the finish line. The path from Sandbox to Incubating will require proving that the project's governance scales as well as its technology.</p>
+    <p>But it was not just about prestige. CNCF acceptance delivered concrete, structural changes that matter for everyone who contributes to or depends on the project.</p>
 
-    <p><strong>For contributors,</strong> CNCF governance means that contributions are protected by a neutral IP policy (the Apache 2.0 license plus CNCF's CLA), the project has a clear code of conduct, and there is a transparent process for becoming a maintainer, joining governance bodies, and influencing the project's direction. This is what makes multi-company open-source collaboration sustainable over the long term.</p>
+    <p><strong>Vendor-neutral governance.</strong> No single company controls the roadmap. IBM Research, Red Hat, and Google Cloud each donated intellectual property and engineering resources, but the project's direction is now governed by the contributor community. This is the structural guarantee that prevents the "rug pull" scenario &mdash; where a dominant vendor steers the project to serve its own interests at the community's expense. For contributors investing their time and career capital, this protection is not theoretical. It is the reason you can commit to a project without wondering if the rules will change when the business strategy shifts.</p>
 
-    <p>Historically, the projects that have navigated this path most successfully &mdash; Kubernetes, Prometheus, Envoy, Containerd &mdash; share a common trait: they solved a real infrastructure problem that no single vendor could own. llm-d's bet is that distributed LLM inference routing is that kind of problem.</p>
+    <p><strong>CNCF infrastructure.</strong> CI pipelines, security audit programs, trademark protection, and the visibility that comes with being part of the landscape. For a project aiming to be infrastructure, this institutional backing accelerates the trust-building that enterprise adoption requires.</p>
+
+    <p><strong>A path forward.</strong> Sandbox to Incubating to Graduated. Incubating requires demonstrated production adoption, robust governance, and a completed security audit. Graduated &mdash; the level Kubernetes, Prometheus, and Envoy hold &mdash; requires broad adoption and a proven governance model. The Sandbox acceptance is the starting line, not the finish line. But it is the starting line that matters most.</p>
+
+    <p><strong>For contributors,</strong> CNCF governance means that your work is protected by a neutral IP policy (Apache 2.0 plus CNCF's CLA), the project has a clear code of conduct, and there is a transparent process for becoming a maintainer and influencing the project's direction. This is what makes multi-company open-source collaboration sustainable over years, not just months.</p>
+
+    <p>The projects that navigate this path most successfully &mdash; Kubernetes, Prometheus, Envoy, Containerd &mdash; share a common trait: they solved a real infrastructure problem that no single vendor could own. llm-d's bet is that distributed LLM inference routing is exactly that kind of problem.</p>
+
+    <p>Amsterdam told us that bet is landing.</p>
   </section>
 
-  <!-- Section 9: Enterprise Track -->
-  <section id="enterprise">
-    <h2>The Enterprise Track</h2>
+  <!-- Section 8: Competitive Landscape -->
+  <section id="landscape">
+    <h2>Where llm-d Fits: The Stack Is Layering</h2>
 
-    <p>While the open-source project moved at open-source speed, the enterprise track kept pace with a discipline that reflected Red Hat's decades of experience shipping open-source software to risk-averse organizations.</p>
+    <p>Let me say something that might sound counterintuitive: llm-d does not have competitors. It has <strong>neighbors</strong>.</p>
+
+    <p>The inference stack is not consolidating into one winner-take-all framework. It is layering &mdash; execution engines, programming frameworks, runtime orchestration, fleet routing, and general-purpose serving are settling into distinct strata. The winners will be projects that compose gracefully with the rest of the stack, not projects that try to swallow it whole. Here is where the major projects sit.</p>
+
+    <div class="comp-grid">
+      <div class="comp-card">
+        <h4>NVIDIA Dynamo</h4>
+        <p>Dynamo optimizes the <strong>execution and runtime layer</strong> &mdash; how inference computations are scheduled on NVIDIA hardware with deep NVLink/NVSwitch/CUDA integration. llm-d optimizes the <strong>routing and orchestration layer</strong> &mdash; deciding which pod handles which request across the fleet. In March 2026, NVIDIA announced a formal Dynamo-llm-d integration. The fact that NVIDIA chose to integrate rather than compete tells you everything about where the boundary lines are. Dynamo makes each node fast. llm-d makes the fleet smart. Use both.</p>
+      </div>
+      <div class="comp-card">
+        <h4>TensorRT-LLM</h4>
+        <p>NVIDIA's inference optimization library compiles models into execution plans for NVIDIA GPUs. It operates at a fundamentally different level of abstraction. TensorRT-LLM makes individual inference faster. llm-d ensures the right inference happens on the right hardware with the right cached state. They are layered, not competing: vLLM can use TensorRT-LLM as a backend, and llm-d orchestrates vLLM pods.</p>
+      </div>
+      <div class="comp-card">
+        <h4>SGLang</h4>
+        <p>A programming framework for LLM applications with a serving runtime. Its strengths are structured generation and composable LLM calls. SGLang optimizes how you write LLM applications and how individual requests are served. llm-d optimizes how a fleet handles many concurrent requests across many models. llm-d is engine-agnostic in principle &mdash; a future where SGLang serves as the engine inside llm-d-managed pods is architecturally natural.</p>
+      </div>
+      <div class="comp-card">
+        <h4>Ray Serve</h4>
+        <p>A general-purpose model serving framework. Excellent for multi-model serving, autoscaling, and heterogeneous pipelines. But general-purpose by design. It does not have LLM-specific optimizations like KV cache-aware routing, prefill/decode disaggregation, or LoRA adapter tracking. For LLM inference specifically, a purpose-built routing layer delivers optimizations that a general framework cannot match. Ray Serve remains strong for non-LLM serving or mixed-model pipelines.</p>
+      </div>
+    </div>
+
+    <div class="callout insight">
+      <div class="callout-title">The Ecosystem Insight</div>
+      <p>The inference stack is layering, and llm-d owns the routing and orchestration layer. The NVIDIA Dynamo integration is proof that this is not just our view &mdash; the ecosystem's biggest players agree. The question is not "which framework wins" but "how cleanly do the layers compose." llm-d's Kubernetes-native, engine-agnostic design is built for exactly this world.</p>
+    </div>
+  </section>
+
+  <!-- Section 9: Academic Foundations -->
+  <section id="academic">
+    <h2>Standing on the Shoulders of Giants</h2>
+
+    <p>Great infrastructure is rarely invented from scratch. It is synthesized from research breakthroughs that came before. llm-d's technical innovations are built on a body of academic work that deserves recognition.</p>
+
+    <h3>vLLM and PagedAttention (UC Berkeley)</h3>
+
+    <p>The breakthrough that made modern LLM serving practical. Woosuk Kwon, Zhuohan Li, Sicheng Lin, and others in Ion Stoica's lab introduced <strong>PagedAttention</strong> &mdash; treating the KV cache like virtual memory, with paging. Instead of pre-allocating contiguous memory blocks (leading to severe fragmentation), PagedAttention allocates cache in small, non-contiguous blocks managed by a page table. Memory utilization jumped from 50-60% to 95%+. vLLM became the de facto standard for LLM serving. It is the engine running inside every llm-d inference pod, and the Berkeley team are founding partners, ensuring the engine and orchestration layer evolve together.</p>
+
+    <h3>LMCache and Prefix Caching (University of Chicago)</h3>
+
+    <p>The University of Chicago's LMCache project formalized <strong>systematic prefix caching</strong> for LLM inference. The insight is elegant: many LLM requests share common prefixes. Every customer-service request shares a system prompt. Every few-shot request shares the same examples. Every multi-turn conversation shares the entire history. By caching KV state for shared prefixes and reusing it across requests, you eliminate redundant computation. This research directly informed llm-d's cache-aware routing: the EPP knows <strong>which specific prefixes</strong> each pod has cached and scores them based on match ratio. The UChicago team are founding partners.</p>
+
+    <h3>NIXL (NVIDIA)</h3>
+
+    <p>NVIDIA's Interconnect Library provides <strong>high-performance memory transfer</strong> between GPUs, between nodes, and across interconnect fabrics (NVLink, InfiniBand, PCIe, RDMA). For llm-d, NIXL is the enabler of practical prefill/decode disaggregation. When a prefill pod hands off its KV cache to a decode pod, that transfer needs microsecond latency and multi-gigabyte-per-second bandwidth. NIXL delivers both, using whatever the fastest available interconnect is. Without it, disaggregation's latency penalty would negate its throughput benefit.</p>
+  </section>
+
+  <!-- Section 10: Enterprise Track -->
+  <section id="enterprise">
+    <h2>The Enterprise Story</h2>
+
+    <p>While the open-source project moved at open-source speed, the enterprise track kept pace with a discipline that reflected Red Hat's decades of experience shipping open-source software to organizations where downtime is measured in dollars per second.</p>
 
     <div class="stats-row">
       <div class="s"><div class="n">4</div><div class="l">Enterprise Releases</div></div>
@@ -439,107 +564,122 @@ footer a{color:var(--accent)}
       <div class="s"><div class="n">2-3 mo</div><div class="l">Upstream-to-Enterprise Lag</div></div>
     </div>
 
-    <p><strong>May 2025: Red Hat AI Inference Server launches</strong> alongside the open-source announcement. Day-one enterprise commitment, not a wait-and-see approach. The enterprise product was built on the same vLLM + llm-d stack as the open-source project, with the additions that enterprise customers require: certified hardware compatibility, long-term support commitments, security patching, and enterprise SLAs.</p>
+    <p><strong>May 2025:</strong> Red Hat AI Inference Server launches alongside the open-source announcement. Day-one enterprise commitment. The product was built on the same vLLM + llm-d stack, with certified hardware compatibility, long-term support, security patching, and enterprise SLAs.</p>
 
-    <p><strong>October 2025: Red Hat AI 3 reaches GA.</strong> llm-d capabilities become generally available in the enterprise product. This included MaaS (Model-as-a-Service) capabilities, a Llama Stack-based Unified API, and MCP (Model Context Protocol) adoption. Production support on certified hardware began in earnest.</p>
+    <p><strong>October 2025:</strong> Red Hat AI 3 reaches GA. llm-d capabilities go generally available in the enterprise product, including MaaS (Model-as-a-Service) capabilities, a Llama Stack-based Unified API, and MCP (Model Context Protocol) adoption.</p>
 
-    <p><strong>February 2026: Red Hat AI 3.3 ships</strong> with the v0.5 capabilities: scale-to-zero autoscaling, LoRA routing, and hierarchical cache management. The two-to-three-month lag between upstream release and enterprise availability held steady.</p>
+    <p><strong>February 2026:</strong> Red Hat AI 3.3 ships with v0.5 capabilities: scale-to-zero, LoRA routing, hierarchical cache management. The two-to-three-month lag between upstream and enterprise held steady.</p>
 
-    <p><strong>May 2026: Red Hat AI 3.4 announced at Red Hat Summit</strong> in Atlanta. Two developments stood out. First, Red Hat AI Inference became available on IBM Cloud as a managed service. Second &mdash; and strategically more significant &mdash; the product expanded beyond OpenShift to vanilla Kubernetes on CoreWeave and Azure. This was a significant shift: Red Hat was saying that llm-d-based inference was valuable enough to ship on non-Red Hat Kubernetes distributions. The inference layer had become more important than the platform lock-in.</p>
+    <p><strong>May 2026:</strong> Red Hat AI 3.4 at Red Hat Summit in Atlanta. Two noteworthy developments. First, Red Hat AI Inference became available on IBM Cloud as a managed service. Second &mdash; and this is the strategically important one &mdash; the product expanded beyond OpenShift to vanilla Kubernetes on CoreWeave and Azure. Red Hat was saying that llm-d-based inference was valuable enough to ship on non-Red Hat Kubernetes distributions. The inference layer had become more important than the platform.</p>
 
-    <p>The cadence tells the story. Every major upstream open-source release appeared in the enterprise product within two to three months. This was not a "throw it over the wall" relationship &mdash; the upstream and downstream engineering teams moved in lockstep, with the same engineers often contributing to both.</p>
+    <p>The cadence tells the story: every major upstream release appeared in the enterprise product within two to three months. Same engineers contributing to both. Upstream leads, downstream follows. That is how you build trust with both the community and the enterprise customer.</p>
   </section>
 
-  <!-- Section 10: Forward-Looking -->
-  <section id="forward">
-    <h2>Forward-Looking: What v1.0 Might Look Like</h2>
+  <div class="section-break">* * *</div>
 
-    <p>Seven releases in, llm-d has proven its core thesis: cache-aware routing and prefill/decode disaggregation work, they work at scale, and they work across hardware vendors. But the problems that remain unsolved are at least as interesting as the ones that have been solved. Here is what v1.0 might need to include before the project can claim the stability and completeness that a 1.0 version number implies.</p>
+  <!-- Section 11: What's Next -->
+  <section id="forward">
+    <h2>What We Are Building Next</h2>
+
+    <p>Seven releases in, llm-d has proven its core thesis. Cache-aware routing works. Prefill/decode disaggregation works. They work at scale. They work across hardware vendors. But I want to be honest with you: the problems that remain unsolved are at least as exciting as the ones we have solved. And some of them are genuinely hard.</p>
 
     <h3>Multi-Cluster Federation</h3>
 
-    <p>Today, llm-d routes within a single Kubernetes cluster. But enterprises increasingly run inference workloads across multiple clusters &mdash; different regions for latency, different cloud providers for redundancy, on-premise clusters for data sovereignty. Multi-cluster federation would give the EPP a fleet-wide view, routing requests to the best available pod regardless of which cluster it lives in. This requires solving cross-cluster KV cache state sharing, which is a hard distributed systems problem with significant latency implications.</p>
-
-    <h3>Model-Aware Autoscaling</h3>
-
-    <p>Current autoscaling treats inference pods as undifferentiated workloads. But a 7B model and a 70B model have fundamentally different scaling curves. The 7B model can serve high throughput on a single GPU and scales well by adding pods. The 70B model requires tensor parallelism across multiple GPUs per pod and has a much more complex scaling function. Model-aware autoscaling would encode these characteristics into the scaling decisions, choosing the right number and size of pods for each model based on its specific hardware requirements and observed load patterns.</p>
-
-    <h3>Deeper Hardware Integration</h3>
-
-    <p>The accelerator landscape is diversifying rapidly. NVIDIA B200, AMD MI300X, Intel Gaudi 3, Google TPU v6 &mdash; each has different strengths. Some models run better on hardware with high memory bandwidth. Others benefit from raw compute throughput. Hardware-aware scheduling that matches model architectures to silicon strengths would allow a heterogeneous cluster to serve each model on the hardware that suits it best, improving both performance and cost efficiency.</p>
+    <p>Today, llm-d routes within a single Kubernetes cluster. Enterprises increasingly run inference across multiple clusters &mdash; different regions for latency, different providers for redundancy, on-premise for data sovereignty. Multi-cluster federation would give the EPP a fleet-wide view, routing to the best pod regardless of which cluster it lives in. This requires cross-cluster KV cache state sharing, which is a hard distributed systems problem. The kind of problem that gets researchers out of bed in the morning.</p>
 
     <h3>Agentic Inference Patterns</h3>
 
-    <p>As AI agents become primary consumers of LLM inference, the workload patterns are changing. Agents make chains of LLM calls &mdash; tool calls, chain-of-thought reasoning, multi-turn planning &mdash; where each call depends on the previous one's output. The routing layer needs to handle these patterns differently than simple request/response. An agent's entire chain should ideally route to the same pod (or pod group) to maximize KV cache reuse across the chain. This requires the EPP to understand request chains, not just individual requests.</p>
+    <p>AI agents are becoming primary consumers of LLM inference, and their workload patterns are fundamentally different. Agents make chains of calls &mdash; tool calls, reasoning steps, multi-turn planning &mdash; where each call depends on the previous output. An agent's entire chain should ideally route to the same pod group to maximize KV cache reuse. The EPP needs to understand request chains, not just individual requests. This is new territory, and the patterns have not yet been established.</p>
 
     <h3>Cost-Aware Routing</h3>
 
-    <p>Not every request needs the fastest hardware. A batch summarization job can tolerate higher latency in exchange for running on cheaper spot instances. Cost-aware routing would allow the EPP to factor in hardware cost alongside cache affinity, queue depth, and latency targets &mdash; routing to the cheapest available hardware that still meets the request's SLA.</p>
+    <p>Not every request needs the fastest hardware. A batch summarization job can tolerate higher latency in exchange for cheaper spot instances. Cost-aware routing would factor in hardware cost alongside cache affinity, queue depth, and latency targets &mdash; routing to the cheapest available hardware that still meets the SLA. For organizations spending millions on GPU compute, this is where the real savings live.</p>
 
-    <h3>The Unsolved Frontiers</h3>
+    <h3>Multi-Modal Inference</h3>
 
-    <p>Beyond v1.0, there are problems that the field has not yet figured out how to solve efficiently. <strong>Multi-modal inference routing</strong> &mdash; how do you cache and route image embeddings alongside text KV caches? <strong>Cross-cloud KV cache transfer</strong> &mdash; is it even practical to transfer gigabytes of cache state across cloud boundaries? <strong>Inference-time compute scaling</strong> &mdash; can the routing layer dynamically allocate more "thinking time" (more compute budget) to harder problems while spending less on easy ones?</p>
+    <p>How do you cache and route image embeddings alongside text KV caches? As models become multi-modal, the routing layer needs to handle heterogeneous cache types. This is largely unexplored territory.</p>
 
-    <p>What "1.0" ultimately means is: stable APIs that don't break between releases, backward compatibility guarantees that enterprises can rely on, and production hardening at a level where the open-source version is deployable without the enterprise wrapper for organizations that have the operational maturity to run it themselves.</p>
+    <h3>Model-Aware Autoscaling</h3>
+
+    <p>A 7B model and a 70B model have fundamentally different scaling curves. Model-aware autoscaling would encode these characteristics into scaling decisions, choosing the right number and size of pods for each model based on its architecture, hardware requirements, and observed load patterns.</p>
+
+    <h3>Deeper Hardware Integration</h3>
+
+    <p>NVIDIA B200, AMD MI300X, Intel Gaudi 3, Google TPU v6 &mdash; each has different strengths. Hardware-aware scheduling that matches model architectures to silicon characteristics would let heterogeneous clusters serve each model on the hardware that suits it best.</p>
+
+    <div class="callout insight">
+      <div class="callout-title">The Unsolved Frontiers</div>
+      <p>Cross-cloud KV cache transfer &mdash; is it even practical to move gigabytes of cache state across cloud boundaries? Inference-time compute scaling &mdash; can the routing layer dynamically allocate more "thinking time" to harder problems? These are open research questions, not engineering tasks. The answers will shape what v1.0 looks like: stable APIs, backward compatibility guarantees, production hardening at a level where the open-source version is deployable without an enterprise wrapper. That is the bar. We intend to clear it.</p>
+    </div>
   </section>
 
-  <!-- Section 11: Conclusion -->
-  <section id="conclusion">
-    <h2>Thirteen Months In</h2>
+  <!-- Section 12: Closing -->
+  <section id="closing">
+    <h2>Come Build This With Us</h2>
 
-    <p>From a Summit stage announcement to a CNCF Sandbox project. From a prototype that routed at 45 tokens per second to a production system that sustains 50,000. From a coalition of five core partners to an ecosystem of thirteen-plus organizations spanning chip vendors, cloud providers, AI companies, and research universities. Thirteen months is not a long time, and the speed of llm-d's trajectory is unusual even by open-source infrastructure standards.</p>
+    <p>Here is what I know after thirteen months.</p>
 
-    <p>But so is the problem. Distributed LLM inference is the kind of challenge that compresses timelines because it has to. The models are getting bigger. The demand is growing exponentially. The cost of inefficient serving is measured in millions of dollars of wasted GPU-hours. Every month of delay is a month where organizations are either over-provisioning expensive hardware or under-serving their users. The urgency is real, and it shows in the release cadence.</p>
+    <p>The foundation is laid. Seven releases. A CNCF home. Performance that went from 45 tokens per second to 50,000. An architecture that has been validated by partners whose names carry weight in every boardroom and every server room on the planet. Enterprise GA status. Cross-platform hardware support. Active-active high availability. The technology works.</p>
 
-    <p>What made this speed possible was the convergence of three factors. <strong>The right technical insight</strong>: cache-aware routing is a genuinely novel approach to a problem that traditional infrastructure tools cannot solve, and it delivered measurable, large improvements from the first release that implemented it. <strong>The right coalition</strong>: multi-vendor from day one, with academic research partners providing the theoretical foundations and industry partners providing the engineering scale and production validation. <strong>The right governance model</strong>: open-source upstream, enterprise downstream, CNCF neutral ground, with a clear commitment that the open-source project leads and the enterprise product follows.</p>
+    <p>But technology was never the hard part.</p>
 
-    <p>The next year will test whether this model scales &mdash; not just technically, but organizationally. Can a CNCF Sandbox project move at the speed the AI inference market demands while maintaining the governance rigor that enterprise adopters require? Can a multi-vendor coalition sustain collaboration as the inference market becomes more competitive? Can the project absorb new contributors fast enough to avoid the burnout that kills promising open-source projects?</p>
+    <p>The hard part is building a community that can sustain the pace. That can absorb new contributors without burning out the early ones. That can maintain governance rigor while moving at the speed the AI inference market demands. That can navigate the inevitable tensions when partners who also compete need to collaborate on a shared roadmap.</p>
 
-    <p>These are organizational questions, not technical ones. And in the long run, they matter more than any benchmark number. But thirteen months in, the trajectory is clear. llm-d has demonstrated that distributed LLM inference is an infrastructure problem, that infrastructure problems have infrastructure solutions, and that those solutions work best when they are built in the open, by a broad coalition, for the benefit of the entire ecosystem.</p>
+    <div class="pull-quote">
+      The problems still unsolved are bigger than the ones we have solved. Multi-cluster federation. Agentic inference. Cost-aware routing. Multi-modal caching. These are not incremental improvements. They are the next chapter. And they need people who are as excited about the future as we are.
+    </div>
 
-    <p>The foundation is laid. The architecture is proven. The ecosystem is forming. What happens next will be determined not by what the technology can do, but by how well the community can govern its growth.</p>
+    <p>If you have felt the pain of running LLM inference at scale &mdash; the wasted GPU-hours, the unpredictable latency, the jury-rigged load balancers &mdash; you already understand why this project exists. If you have worked with Kubernetes and wished the inference layer spoke its language natively, you understand the architecture. If you have contributed to open-source infrastructure and know the satisfaction of building something that thousands of organizations rely on, you understand the opportunity.</p>
+
+    <p>The foundation is laid. The ecosystem is forming. The hardest and most interesting problems are still ahead of us.</p>
+
+    <p><strong>Come build this with us.</strong></p>
   </section>
 
   <div class="cta">
-    <h3>Explore the Interactive Timeline</h3>
+    <h3>Explore the Full Journey</h3>
     <p>See every milestone, release, and partnership mapped across llm-d's first year in an interactive visual timeline.</p>
-    <a href="../" class="btn">Open the Timeline</a>
+    <a href="../" class="btn">Open the Interactive Timeline</a>
+    <a href="https://github.com/llm-d" class="btn">Star Us on GitHub</a>
   </div>
 
 </article>
 
 <footer>
-  <p>llm-d Year in Review &mdash; Part of the llm-d Content Hub</p>
-  <p style="margin-top:8px"><a href="../">Back to the interactive timeline</a></p>
+  <p>llm-d Year in Review &mdash; Written by Markell Rawls</p>
+  <div class="footer-links">
+    <a href="../">Interactive Timeline</a>
+    <a href="https://github.com/llm-d">GitHub</a>
+  </div>
 </footer>
 
 <script>
 (function(){
   // Reading progress bar
-  const progressBar = document.getElementById('reading-progress');
+  var progressBar = document.getElementById('reading-progress');
   function updateProgress(){
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    var scrollTop = window.scrollY;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
     progressBar.style.width = progress + '%';
   }
   window.addEventListener('scroll', updateProgress, {passive:true});
   updateProgress();
 
   // Scroll-triggered fade-in for sections
-  const sections = document.querySelectorAll('article section');
-  const sectionObserver = new IntersectionObserver(function(entries){
+  var sections = document.querySelectorAll('article section');
+  var sectionObserver = new IntersectionObserver(function(entries){
     entries.forEach(function(entry){
       if(entry.isIntersecting){
         entry.target.classList.add('visible');
       }
     });
-  }, {threshold:0.08, rootMargin:'0px 0px -40px 0px'});
+  }, {threshold:0.06, rootMargin:'0px 0px -50px 0px'});
   sections.forEach(function(s){ sectionObserver.observe(s); });
 
   // TOC active state highlighting
-  const tocLinks = document.querySelectorAll('.toc-sidebar a');
-  const sectionEls = [];
+  var tocLinks = document.querySelectorAll('.toc-sidebar a');
+  var sectionEls = [];
   tocLinks.forEach(function(link){
     var id = link.getAttribute('href').replace('#','');
     var el = document.getElementById(id);
@@ -547,7 +687,7 @@ footer a{color:var(--accent)}
   });
 
   function updateTOC(){
-    var scrollPos = window.scrollY + 120;
+    var scrollPos = window.scrollY + 140;
     var current = '';
     for(var i = 0; i < sectionEls.length; i++){
       if(sectionEls[i].el.offsetTop <= scrollPos){
