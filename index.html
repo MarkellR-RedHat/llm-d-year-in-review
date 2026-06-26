@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>llm-d: Year in Review — From Launch to CNCF Sandbox</title>
+<title>llm-d: Year in Review - From Launch to CNCF Sandbox</title>
 <meta name="description" content="The definitive story of llm-d: from 45 tok/s to 50,000 tok/s in 13 months. Open-source distributed LLM inference on Kubernetes.">
 <meta name="author" content="Markell Rawls">
 <style>
@@ -30,6 +30,9 @@ a:hover{color:#60a5fa;text-decoration:underline}
 /* === PARTICLE CANVAS === */
 #particle-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
 
+/* === AMBIENT CODE CANVAS === */
+#ambient-code-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
 /* === NAV === */
 .nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(6,9,15,.8);backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid rgba(255,255,255,.06);transition:transform .3s}
 .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px}
@@ -39,7 +42,7 @@ a:hover{color:#60a5fa;text-decoration:underline}
 .nav-links a{padding:6px 14px;border-radius:8px;font-size:.78rem;color:var(--text-muted);transition:all .2s;white-space:nowrap;text-decoration:none;font-weight:500;letter-spacing:.01em}
 .nav-links a:hover,.nav-links a.active{color:var(--accent);background:var(--accent-glow);text-decoration:none}
 
-/* === HERO — MASSIVE 1,000x === */
+/* === HERO === */
 .hero{position:relative;text-align:center;padding:0 24px;overflow:hidden;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:1200px;height:1200px;background:radial-gradient(circle,rgba(59,130,246,.08) 0%,rgba(6,182,212,.04) 30%,transparent 65%);pointer-events:none}
 .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(to top,var(--bg),transparent);pointer-events:none;z-index:3}
@@ -82,6 +85,19 @@ a:hover{color:#60a5fa;text-decoration:underline}
 .fade-delay-2{transition-delay:.2s}
 .fade-delay-3{transition-delay:.3s}
 .fade-delay-4{transition-delay:.4s}
+.fade-delay-5{transition-delay:.5s}
+
+/* === GROWTH DASHBOARD === */
+.dashboard-section{padding:var(--section-gap) 0;position:relative;z-index:1}
+.dashboard-grid{max-width:1100px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:repeat(5,1fr);gap:20px}
+.dashboard-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--card-radius);padding:28px 20px;text-align:center;position:relative;overflow:hidden;transition:all .3s}
+.dashboard-card::before{content:'';position:absolute;inset:-1px;border-radius:var(--card-radius);padding:1px;background:var(--gradient-border);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s}
+.dashboard-card:hover::before{opacity:1}
+.dashboard-card:hover{border-color:rgba(59,130,246,.3);transform:translateY(-4px)}
+.dashboard-card-icon{font-size:1.6rem;margin-bottom:10px}
+.dashboard-card .dash-num{font-size:2.2rem;font-weight:800;font-family:var(--font-mono);background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;line-height:1.2}
+.dashboard-card .dash-label{font-size:.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.15em;font-weight:500;margin-top:4px;display:block}
+.dashboard-card canvas{display:block;margin:12px auto 0;width:100%;height:40px}
 
 /* === THE PROBLEM SECTION === */
 .problem-section{padding:var(--section-gap) 0;position:relative;z-index:1}
@@ -108,7 +124,7 @@ a:hover{color:#60a5fa;text-decoration:underline}
 .timeline-track{display:flex;align-items:flex-start;padding:40px 60px 60px;gap:0;position:relative;min-width:max-content}
 .timeline-track::before{content:'';position:absolute;top:50%;left:40px;right:40px;height:2px;background:linear-gradient(90deg,transparent,var(--accent) 2%,var(--accent) 98%,transparent);transform:translateY(-50%);opacity:.6}
 
-.milestone-card{flex:0 0 320px;position:relative;padding:20px;cursor:pointer;transition:all .4s ease}
+.milestone-card{flex:0 0 320px;position:relative;padding:20px;cursor:pointer;transition:all .4s ease;perspective:800px}
 .milestone-card .card-connector{position:absolute;left:50%;width:2px;background:var(--accent);opacity:.3;transition:opacity .3s}
 .milestone-card:nth-child(odd) .card-connector{top:0;height:calc(50% - 30px);transform:translateX(-50%)}
 .milestone-card:nth-child(even) .card-connector{bottom:0;height:calc(50% - 30px);transform:translateX(-50%)}
@@ -117,18 +133,27 @@ a:hover{color:#60a5fa;text-decoration:underline}
 .milestone-card:nth-child(even) .card-dot{top:calc(50% - 37px)}
 .milestone-card:hover .card-dot{background:var(--accent);box-shadow:0 0 20px rgba(59,130,246,.6)}
 
+/* 3D flip card for timeline */
+.card-flipper{position:relative;transition:transform .6s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+.milestone-card.flipped .card-flipper{transform:rotateY(180deg)}
+.card-front,.card-back{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.card-front{position:relative;z-index:2}
+.card-back{position:absolute;top:0;left:0;right:0;transform:rotateY(180deg);z-index:1}
+
 .milestone-card .card-body{background:var(--surface);border:1px solid var(--border);border-radius:var(--card-radius);padding:24px;transition:all .4s ease;position:relative;overflow:hidden}
 .milestone-card .card-body::before{content:'';position:absolute;inset:-1px;border-radius:var(--card-radius);padding:1px;background:var(--gradient-border);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .4s}
 .milestone-card:hover .card-body::before{opacity:1}
 .milestone-card:nth-child(odd) .card-body{margin-bottom:calc(50% + 20px)}
 .milestone-card:nth-child(even) .card-body{margin-top:calc(50% + 20px)}
 .milestone-card:hover .card-body{border-color:rgba(59,130,246,.3);box-shadow:0 8px 40px rgba(59,130,246,.1)}
-.milestone-card.expanded .card-body{border-color:rgba(59,130,246,.4);box-shadow:0 12px 48px rgba(59,130,246,.15)}
-.milestone-card.expanded .card-body::before{opacity:1}
+.milestone-card.flipped .card-body{border-color:rgba(59,130,246,.4);box-shadow:0 12px 48px rgba(59,130,246,.15)}
+.milestone-card.flipped .card-body::before{opacity:1}
 
 .card-date{font-size:.72rem;font-family:var(--font-mono);color:var(--text-muted);margin-bottom:8px;letter-spacing:.04em}
 .card-title{font-size:.95rem;font-weight:700;margin-bottom:10px;color:var(--text);line-height:1.4}
 .card-tag{display:inline-block;padding:3px 12px;border-radius:12px;font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.card-flip-hint{display:block;margin-top:12px;font-size:.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;opacity:.6;transition:opacity .3s}
+.milestone-card:hover .card-flip-hint{opacity:1;color:var(--accent)}
 
 .tag-launch{background:rgba(59,130,246,.15);color:var(--accent)}
 .tag-release{background:rgba(16,185,129,.12);color:var(--green)}
@@ -137,15 +162,10 @@ a:hover{color:#60a5fa;text-decoration:underline}
 .tag-cncf{background:rgba(6,182,212,.12);color:var(--cyan)}
 .tag-partnership{background:rgba(249,115,22,.12);color:var(--orange)}
 
-/* Expanded card detail */
-.card-detail{max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .4s ease,margin .3s ease;opacity:0;margin-top:0}
-.milestone-card.expanded .card-detail{max-height:400px;opacity:1;margin-top:16px}
-.card-detail-inner{border-top:1px solid var(--border);padding-top:16px}
-.card-detail-text{font-size:.82rem;color:var(--text-dim);line-height:1.7;margin-bottom:12px}
-.card-image-placeholder{width:100%;height:60px;border-radius:8px;background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(6,182,212,.12));margin-bottom:12px}
-.card-close{position:absolute;top:12px;right:12px;width:24px;height:24px;border:none;background:rgba(255,255,255,.06);border-radius:6px;color:var(--text-muted);cursor:pointer;font-size:.8rem;display:none;align-items:center;justify-content:center;transition:all .2s}
-.milestone-card.expanded .card-close{display:flex}
-.card-close:hover{background:rgba(255,255,255,.12);color:var(--text)}
+/* Card back for flipped state */
+.card-back .card-body{background:var(--surface2)}
+.card-back-detail{font-size:.82rem;color:var(--text-dim);line-height:1.7}
+.card-back-close{display:block;margin-top:14px;font-size:.65rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;cursor:pointer;font-weight:600}
 
 /* Journey Mode */
 .journey-controls{display:flex;justify-content:center;gap:12px;margin-top:24px;padding:0 24px}
@@ -195,7 +215,7 @@ a:hover{color:#60a5fa;text-decoration:underline}
 .comp-features .check{color:var(--green);font-weight:700;flex-shrink:0}
 .comp-features .cross{color:var(--red);font-weight:700;flex-shrink:0;opacity:.4}
 
-/* === PARTNER SECTION — PRESTIGIOUS === */
+/* === PARTNER SECTION === */
 .partners-section{padding:var(--section-gap) 0}
 .partner-roster{max-width:1000px;margin:0 auto 64px;padding:0 24px}
 .partner-category{margin-bottom:40px}
@@ -277,18 +297,57 @@ a:hover{color:#60a5fa;text-decoration:underline}
 .growth-container::before{content:'';position:absolute;inset:-1px;border-radius:var(--card-radius);padding:1px;background:var(--gradient-border);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.3}
 #growthChart{width:100%;height:300px}
 
-/* === WHAT'S NEXT === */
+/* === CONTRIBUTOR SPOTLIGHT === */
+.spotlight-section{padding:var(--section-gap) 0;position:relative;z-index:1}
+.spotlight-grid{max-width:1100px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.spotlight-card{perspective:600px;cursor:pointer;height:280px}
+.spotlight-card-inner{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+.spotlight-card.flipped .spotlight-card-inner{transform:rotateY(180deg)}
+.spotlight-card-front,.spotlight-card-back{position:absolute;top:0;left:0;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--card-radius);overflow:hidden}
+.spotlight-card-front{background:var(--surface);border:1px solid var(--border);padding:32px;display:flex;flex-direction:column;justify-content:space-between;transition:border-color .3s}
+.spotlight-card:hover .spotlight-card-front{border-color:rgba(59,130,246,.3)}
+.spotlight-card-front::before{content:'';position:absolute;inset:-1px;border-radius:var(--card-radius);padding:2px;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s}
+.spotlight-card:hover .spotlight-card-front::before{opacity:1}
+.spotlight-card[data-type="core"] .spotlight-card-front::before{background:linear-gradient(135deg,var(--accent),var(--cyan))}
+.spotlight-card[data-type="research"] .spotlight-card-front::before{background:linear-gradient(135deg,var(--purple),var(--pink))}
+.spotlight-card[data-type="hardware"] .spotlight-card-front::before{background:linear-gradient(135deg,var(--orange),var(--yellow))}
+.spotlight-card[data-type="cloud"] .spotlight-card-front::before{background:linear-gradient(135deg,var(--cyan),var(--accent))}
+.spotlight-role{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.spotlight-org{font-size:.78rem;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+.spotlight-desc{font-size:.85rem;color:var(--text-dim);line-height:1.7;flex:1}
+.spotlight-flip-hint{font-size:.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.12em;margin-top:12px;opacity:.5;transition:opacity .3s}
+.spotlight-card:hover .spotlight-flip-hint{opacity:1;color:var(--accent)}
+.spotlight-card-back{background:var(--surface2);border:1px solid var(--border);padding:32px;transform:rotateY(180deg);display:flex;flex-direction:column;justify-content:center}
+.spotlight-back-title{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:14px}
+.spotlight-back-text{font-size:.82rem;color:var(--text-dim);line-height:1.8}
+.spotlight-back-hint{font-size:.65rem;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-top:16px}
+
+/* === WHAT'S NEXT / ROADMAP === */
 .next-section{position:relative;z-index:1;padding:var(--section-gap) 0}
-.next-content{max-width:900px;margin:0 auto;padding:0 32px}
-.next-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
-.next-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--card-radius);padding:32px;position:relative;overflow:hidden;transition:all .3s}
-.next-card::before{content:'';position:absolute;inset:-1px;border-radius:var(--card-radius);padding:1px;background:var(--gradient-border);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s}
-.next-card:hover::before{opacity:1}
-.next-card:hover{border-color:rgba(59,130,246,.3);transform:translateY(-4px)}
-.next-card-icon{font-size:2rem;margin-bottom:16px}
-.next-card h3{font-size:1.05rem;font-weight:700;margin-bottom:10px;color:var(--text);letter-spacing:-.01em}
-.next-card p{font-size:.85rem;color:var(--text-dim);line-height:1.7}
-.next-card .next-version{font-family:var(--font-mono);font-size:.7rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;display:block}
+.next-content{max-width:800px;margin:0 auto;padding:0 32px}
+.roadmap-timeline{position:relative;padding-left:40px}
+.roadmap-timeline::before{content:'';position:absolute;left:15px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent),var(--cyan),var(--purple))}
+.roadmap-item{position:relative;margin-bottom:40px;padding:28px;background:var(--surface);border:1px solid var(--border);border-radius:var(--card-radius);transition:all .3s}
+.roadmap-item::before{content:'';position:absolute;left:-33px;top:32px;width:14px;height:14px;border-radius:50%;border:3px solid var(--accent);background:var(--bg);z-index:2;transition:all .3s}
+.roadmap-item:hover::before{background:var(--accent);box-shadow:0 0 16px rgba(59,130,246,.5)}
+.roadmap-item:hover{border-color:rgba(59,130,246,.3);transform:translateX(4px)}
+.roadmap-item::after{content:'';position:absolute;inset:-1px;border-radius:var(--card-radius);padding:1px;background:var(--gradient-border);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s}
+.roadmap-item:hover::after{opacity:1}
+.roadmap-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px}
+.roadmap-version{font-family:var(--font-mono);font-size:.7rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.roadmap-title{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-.01em}
+.roadmap-desc{font-size:.85rem;color:var(--text-dim);line-height:1.7;margin-bottom:14px}
+.roadmap-progress-bar{height:4px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:12px}
+.roadmap-progress-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.roadmap-progress-fill.high{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.roadmap-progress-fill.medium{background:linear-gradient(90deg,var(--accent),var(--cyan))}
+.roadmap-progress-fill.low{background:linear-gradient(90deg,var(--purple),var(--pink))}
+.roadmap-progress-label{font-size:.68rem;color:var(--text-muted);font-family:var(--font-mono)}
+.roadmap-vote{display:flex;align-items:center;gap:10px;margin-top:10px}
+.roadmap-vote-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);font-size:.78rem;cursor:pointer;transition:all .2s;font-family:var(--font-sans);font-weight:600}
+.roadmap-vote-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
+.roadmap-vote-btn.voted{border-color:var(--accent);color:var(--accent);background:rgba(59,130,246,.12)}
+.roadmap-vote-count{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono)}
 
 /* === FOOTER === */
 footer{text-align:center;padding:80px 24px;border-top:1px solid var(--border);color:var(--text-muted);font-size:.85rem;position:relative;z-index:1}
@@ -313,13 +372,18 @@ footer .footer-copy{margin-top:32px;font-size:.75rem;color:var(--text-muted)}
   .section{padding:80px 0}
   .comparison-selectors{flex-direction:column}
   .cncf-stat-row{gap:32px}
-  .next-grid{grid-template-columns:1fr}
   .partner-category{margin-bottom:28px}
   .cncf-donors{flex-direction:column;align-items:center}
+  .dashboard-grid{grid-template-columns:repeat(2,1fr)}
+  .dashboard-grid .dashboard-card:last-child{grid-column:span 2}
+  .spotlight-grid{grid-template-columns:1fr}
+  .roadmap-timeline{padding-left:30px}
 }
 @media(max-width:480px){
   .milestone-card{flex:0 0 260px}
   .hero-number{font-size:clamp(4rem,15vw,8rem)}
+  .dashboard-grid{grid-template-columns:1fr}
+  .dashboard-grid .dashboard-card:last-child{grid-column:span 1}
 }
 </style>
 </head>
@@ -327,6 +391,9 @@ footer .footer-copy{margin-top:32px;font-size:.75rem;color:var(--text-muted)}
 
 <!-- Particle Canvas -->
 <canvas id="particle-canvas"></canvas>
+
+<!-- Ambient Code Canvas -->
+<canvas id="ambient-code-canvas"></canvas>
 
 <!-- Navigation -->
 <nav class="nav" id="nav">
@@ -342,17 +409,18 @@ footer .footer-copy{margin-top:32px;font-size:.75rem;color:var(--text-muted)}
       <a href="#cncf">CNCF</a>
       <a href="#whatif">Imagine</a>
       <a href="#growth">Growth</a>
-      <a href="#next">What's Next</a>
+      <a href="#spotlight">Spotlight</a>
+      <a href="#next">Roadmap</a>
     </div>
   </div>
 </nav>
 
-<!-- Hero Section — 1,000x dominates the viewport -->
+<!-- Hero Section -->
 <section class="hero" id="hero">
   <div class="hero-eyebrow">llm-d &middot; Year in Review</div>
   <div class="hero-number" aria-label="1,000 times improvement">1,000<span class="hero-number-suffix">x</span></div>
   <p class="hero-throughput">From <strong>45 tok/s</strong> to <strong>50,000 tok/s</strong> in 13 months.</p>
-  <p class="hero-tagline">The story of how an open-source project rewrote the rules of distributed LLM inference on Kubernetes &mdash; and got accepted into the CNCF Sandbox in record time.</p>
+  <p class="hero-tagline">The story of how an open-source project rewrote the rules of distributed LLM inference on Kubernetes and got accepted into the CNCF Sandbox in record time.</p>
   <div class="stats-bar" id="stats-bar">
     <div class="stat">
       <canvas class="stat-burst" width="120" height="80"></canvas>
@@ -377,6 +445,18 @@ footer .footer-copy{margin-top:32px;font-size:.75rem;color:var(--text-muted)}
   </div>
 </section>
 
+<!-- Growth Dashboard -->
+<section class="dashboard-section section" id="dashboard">
+  <div class="section-header fade-in">
+    <span class="section-label">By the Numbers</span>
+    <h2>Growth Dashboard</h2>
+    <p>A snapshot of the community momentum behind llm-d, from first commit to CNCF Sandbox and beyond.</p>
+  </div>
+  <div class="dashboard-grid" id="dashboard-grid">
+    <!-- Built by JS -->
+  </div>
+</section>
+
 <!-- The Problem -->
 <section class="problem-section section" id="problem">
   <div class="section-header fade-in">
@@ -384,9 +464,9 @@ footer .footer-copy{margin-top:32px;font-size:.75rem;color:var(--text-muted)}
     <h2>The Problem</h2>
   </div>
   <div class="problem-content">
-    <p class="fade-in fade-delay-1">LLM inference was broken. Not in a subtle way &mdash; in a <strong>fundamental, architectural way</strong>. Traditional load balancers treated every GPU pod as interchangeable, randomly spraying requests across a cluster. But LLMs are not stateless web servers. They carry enormous context in their KV caches, and the right pod &mdash; one that already holds relevant cached data &mdash; can serve a request <strong>10x faster</strong> than a random one.</p>
-    <div class="problem-pullquote fade-in fade-delay-2">Every random routing decision was burning GPU cycles that could never be recovered. The industry was leaving performance on the table &mdash; not by percentages, but by orders of magnitude.</div>
-    <p class="fade-in fade-delay-3">Organizations deploying LLMs at scale had two options: build a bespoke inference stack from scratch (expensive, fragile, single-vendor), or accept terrible utilization and unpredictable latency. Neither was acceptable. The Kubernetes ecosystem &mdash; the standard for running everything else in production &mdash; had no answer for this problem.</p>
+    <p class="fade-in fade-delay-1">LLM inference was broken. Not in a subtle way, but in a <strong>fundamental, architectural way</strong>. Traditional load balancers treated every GPU pod as interchangeable, randomly spraying requests across a cluster. But LLMs are not stateless web servers. They carry enormous context in their KV caches, and the right pod, one that already holds relevant cached data, can serve a request <strong>10x faster</strong> than a random one.</p>
+    <div class="problem-pullquote fade-in fade-delay-2">Every random routing decision was burning GPU cycles that could never be recovered. The industry was leaving performance on the table, not by percentages, but by orders of magnitude.</div>
+    <p class="fade-in fade-delay-3">Organizations deploying LLMs at scale had two options: build a bespoke inference stack from scratch (expensive, fragile, single-vendor), or accept terrible utilization and unpredictable latency. Neither was acceptable. The Kubernetes ecosystem, the standard for running everything else in production, had no answer for this problem.</p>
     <p class="fade-in fade-delay-4">llm-d was built to fix that. Not with incremental patches, but with a ground-up rethinking of how inference requests should be routed, scheduled, and served across distributed GPU infrastructure. This is the story of what happened next.</p>
   </div>
 </section>
@@ -399,7 +479,7 @@ footer .footer-copy{margin-top:32px;font-size:.75rem;color:var(--text-muted)}
     <p>Every great project has a story. This is ours.</p>
   </div>
   <div class="timeline-intro fade-in">
-    <p>Scroll horizontally through the journey, or start the cinematic Journey Mode to experience it as a narrative.</p>
+    <p>Scroll horizontally through the journey, or start the cinematic Journey Mode to experience it as a narrative. Click any card to flip it and read the details.</p>
   </div>
   <div class="timeline-progress">
     <div class="timeline-progress-bar">
@@ -474,20 +554,20 @@ footer .footer-copy{margin-top:32px;font-size:.75rem;color:var(--text-muted)}
   </div>
 </section>
 
-<!-- CNCF Moment — The Turning Point -->
+<!-- CNCF Moment -->
 <section class="cncf-section section" id="cncf">
   <div class="cncf-content">
     <div class="fade-in">
-      <div class="cncf-date">March 24, 2026 &mdash; KubeCon Europe, Amsterdam</div>
+      <div class="cncf-date">March 24, 2026 - KubeCon Europe, Amsterdam</div>
       <h2 class="cncf-headline">The Moment That Changed Everything</h2>
     </div>
-    <p class="cncf-body fade-in fade-delay-1">llm-d was accepted into the CNCF Sandbox &mdash; the fastest path from announcement to acceptance in recent memory. Just 10 months from launch to vendor-neutral governance under the foundation that stewards Kubernetes itself.</p>
+    <p class="cncf-body fade-in fade-delay-1">llm-d was accepted into the CNCF Sandbox, the fastest path from announcement to acceptance in recent memory. Just 10 months from launch to vendor-neutral governance under the foundation that stewards Kubernetes itself.</p>
     <div class="cncf-donors fade-in fade-delay-2">
       <div class="cncf-donor">IBM Research</div>
       <div class="cncf-donor">Red Hat</div>
       <div class="cncf-donor">Google Cloud</div>
     </div>
-    <p class="cncf-body fade-in fade-delay-3" style="font-size:.95rem;">This was more than a governance milestone. It was a signal to the industry: distributed LLM inference is too important to be owned by any single vendor. The CNCF acceptance validated the architecture, the community, and the mission &mdash; and opened the door for every organization that had been waiting for a neutral standard.</p>
+    <p class="cncf-body fade-in fade-delay-3" style="font-size:.95rem;">This was more than a governance milestone. It was a signal to the industry: distributed LLM inference is too important to be owned by any single vendor. The CNCF acceptance validated the architecture, the community, and the mission, and opened the door for every organization that had been waiting for a neutral standard.</p>
     <div class="cncf-stat-row fade-in fade-delay-4">
       <div class="cncf-stat">
         <span class="cncf-stat-num">10</span>
@@ -542,33 +622,28 @@ footer .footer-copy{margin-top:32px;font-size:.75rem;color:var(--text-muted)}
   </div>
 </section>
 
-<!-- What's Next -->
+<!-- Contributor Spotlight -->
+<section class="spotlight-section section" id="spotlight">
+  <div class="section-header fade-in">
+    <span class="section-label">The People</span>
+    <h2>Contributor Spotlight</h2>
+    <p>Behind every line of code is a team that believed distributed LLM inference could be done differently. Click any card to learn more.</p>
+  </div>
+  <div class="spotlight-grid" id="spotlight-grid">
+    <!-- Built by JS -->
+  </div>
+</section>
+
+<!-- What's Next / Roadmap -->
 <section class="next-section section" id="next">
   <div class="section-header fade-in">
     <span class="section-label">Looking Ahead</span>
-    <h2>What's Next</h2>
-    <p>The 1,000x improvement was just the beginning. Here is where llm-d is headed.</p>
+    <h2>What's Coming Next</h2>
+    <p>The 1,000x improvement was just the beginning. Here is where llm-d is headed. Vote for the features you want most.</p>
   </div>
   <div class="next-content">
-    <div class="next-grid">
-      <div class="next-card fade-in fade-delay-1">
-        <div class="next-card-icon">&#9878;</div>
-        <span class="next-version">v1.0 Horizon</span>
-        <h3>The 1.0 Milestone</h3>
-        <p>A stable, production-hardened API surface. The v1.0 release will mark the moment llm-d transitions from "fast-moving project" to "foundational infrastructure" &mdash; the kind you build your platform on.</p>
-      </div>
-      <div class="next-card fade-in fade-delay-2">
-        <div class="next-card-icon">&#127760;</div>
-        <span class="next-version">Multi-Cluster</span>
-        <h3>Multi-Cluster Federation</h3>
-        <p>Inference routing that spans clusters, regions, and cloud providers. Cache-aware scheduling across geographic boundaries. One control plane, global GPU utilization.</p>
-      </div>
-      <div class="next-card fade-in fade-delay-3">
-        <div class="next-card-icon">&#9889;</div>
-        <span class="next-version">Agentic Patterns</span>
-        <h3>Agentic Inference</h3>
-        <p>Purpose-built routing for agentic workflows: multi-turn conversations, tool-use chains, and complex reasoning loops that demand persistent context and intelligent cache management.</p>
-      </div>
+    <div class="roadmap-timeline" id="roadmap-timeline">
+      <!-- Built by JS -->
     </div>
   </div>
 </section>
@@ -606,24 +681,24 @@ footer .footer-copy{margin-top:32px;font-size:.75rem;color:var(--text-muted)}
    ========================================================= */
 const MILESTONES = [
   {date:"May 20, 2025",title:"llm-d Launches at Red Hat Summit",tag:"launch",tagLabel:"Launch",
-   detail:"The announcement came with a bold claim — that LLM inference routing needed to be fundamentally rethought for distributed systems. Traditional load balancers treat all pods equally, but KV cache locality means the right pod can serve a request 10x faster than a random one.",
+   detail:"The announcement came with a bold claim: that LLM inference routing needed to be fundamentally rethought for distributed systems. Traditional load balancers treat all pods equally, but KV cache locality means the right pod can serve a request 10x faster than a random one.",
    desc:"Red Hat announces llm-d as an open-source distributed LLM inference framework in Boston. Founding partners include Red Hat, Google Cloud, IBM Research, CoreWeave, and NVIDIA."},
   {date:"May 20, 2025",title:"Red Hat AI Inference Server Announced",tag:"enterprise",tagLabel:"Enterprise",
-   detail:"The "upstream first, enterprise alongside" model was unusual in the industry. Most companies build internally first and open-source later. Red Hat launched both simultaneously, ensuring the community version was never a second-class citizen.",
+   detail:"The 'upstream first, enterprise alongside' model was unusual in the industry. Most companies build internally first and open-source later. Red Hat launched both simultaneously, ensuring the community version was never a second-class citizen.",
    desc:"Enterprise productization of llm-d announced alongside the open-source project."},
   {date:"May 28, 2025",title:"First Tagged Release (v0.1.0)",tag:"release",tagLabel:"Release",
    detail:"v0.1 established the core architecture: Gateway API integration, the Endpoint Picker (EPP) scoring algorithm, and the health-check sidecar pattern. Performance was modest (~45 tok/s) but the architecture was sound.",
    desc:"The llm-d-planner ships its first tagged release on GitHub."},
   {date:"July 2025",title:'v0.2 "First Well-Lit Paths"',tag:"release",tagLabel:"Release",
-   detail:"This release proved the thesis. Prefix cache hit rates above 80% became routine. The "Well-Lit Paths" naming reflected opinionated, validated deployment patterns rather than a toolkit of primitives.",
+   detail:"This release proved the thesis. Prefix cache hit rates above 80% became routine. The 'Well-Lit Paths' naming reflected opinionated, validated deployment patterns rather than a toolkit of primitives.",
    desc:"Intelligent prefix-cache-aware scheduling, prefill/decode disaggregation, MoE support."},
   {date:"October 2025",title:'v0.3 "Wider Well-Lit Paths"',tag:"release",tagLabel:"Release",
    detail:"The first cross-platform release. Intel XPU and Google TPU support alongside NVIDIA. NIXL (NVIDIA's Interconnect Library) enabled fast KV cache transfer for disaggregated serving. 2.2k tok/s per GPU on H200 clusters.",
    desc:"Inference Gateway v1.0 GA, cross-platform hardware, NIXL integration."},
-  {date:"Oct 15, 2025",title:"Red Hat AI 3 — llm-d Reaches GA",tag:"enterprise",tagLabel:"Enterprise",
+  {date:"Oct 15, 2025",title:"Red Hat AI 3 - llm-d Reaches GA",tag:"enterprise",tagLabel:"Enterprise",
    detail:"The upstream release appeared in the enterprise product within weeks. Includes MaaS capabilities, Llama Stack-based Unified API, and MCP adoption.",
    desc:"llm-d reaches general availability as enterprise product."},
-  {date:"November 2025",title:"KubeCon NA — Live Demo in Atlanta",tag:"conference",tagLabel:"Conference",
+  {date:"November 2025",title:"KubeCon NA - Live Demo in Atlanta",tag:"conference",tagLabel:"Conference",
    detail:"Live demonstration of MoE model serving with expert parallelism. The demo showed DeepSeek-R1 running across disaggregated prefill/decode pods with real-time cache routing visualization.",
    desc:'"Three Well-Lit Paths to Scalable LLM Inference with llm-d on Kubernetes."'},
   {date:"December 2025",title:"v0.4 Latency & Speculative Decoding",tag:"release",tagLabel:"Release",
@@ -636,7 +711,7 @@ const MILESTONES = [
    detail:"Scale-to-zero autoscaling, LoRA routing, hierarchical cache management for production deployments.",
    desc:"Enterprise release with v0.5 capabilities."},
   {date:"March 24, 2026",title:"CNCF Sandbox Acceptance",tag:"cncf",tagLabel:"CNCF",
-   detail:"Donated by IBM Research, Red Hat, and Google Cloud. Established vendor-neutral governance. The fastest path from announcement to CNCF acceptance in recent memory — just 10 months.",
+   detail:"Donated by IBM Research, Red Hat, and Google Cloud. Established vendor-neutral governance. The fastest path from announcement to CNCF acceptance in recent memory, just 10 months.",
    desc:"llm-d accepted into CNCF Sandbox at KubeCon Europe, Amsterdam."},
   {date:"March 2026",title:"NVIDIA Dynamo Integration",tag:"partnership",tagLabel:"Partnership",
    detail:"Accelerating community initiatives for advancing large-scale distributed inference. Dynamo's execution engine paired with llm-d's routing intelligence.",
@@ -719,54 +794,305 @@ const PERF_DATA = [
   {ver:"v0.7",value:50000,date:"Jun '26"},
 ];
 
+const DASHBOARD_COUNTERS = [
+  {icon:"⭐",label:"GitHub Stars",target:1200,suffix:"+",sparkline:[20,80,200,450,700,950,1200]},
+  {icon:"👥",label:"Contributors",target:85,suffix:"+",sparkline:[5,12,25,40,55,72,85]},
+  {icon:"🔀",label:"PRs Merged",target:340,suffix:"+",sparkline:[8,35,80,140,210,280,340]},
+  {icon:"📦",label:"Releases",target:7,suffix:"",sparkline:[1,2,3,4,5,6,7]},
+  {icon:"🏢",label:"Adopters",target:40,suffix:"+",sparkline:[2,5,10,18,25,33,40]},
+];
+
+const SPOTLIGHT_DATA = [
+  {role:"The Founding Engineers",org:"Red Hat",type:"core",
+   desc:"Built the core Endpoint Picker (EPP) routing algorithm that makes cache-aware scheduling possible. The EPP scores every pod by KV cache affinity, queue depth, and load to ensure the best pod handles every request.",
+   backTitle:"The EPP Algorithm",
+   backText:"The EPP is what makes llm-d fundamentally different from a traditional load balancer. Instead of round-robin or random routing, the EPP examines the prefix hash of incoming requests, matches them against the KV cache contents of each GPU pod, and routes to the pod with the highest cache affinity. This single decision is responsible for the 80%+ cache hit rates that drive 10x latency reductions. The Red Hat team iterated on the scoring function across every release, adding load-awareness, queue-depth balancing, and LoRA adapter routing."},
+  {role:"The vLLM Architects",org:"UC Berkeley",type:"research",
+   desc:"Providing the inference engine foundation that llm-d builds upon. The vLLM project pioneered PagedAttention and continuous batching, making high-throughput LLM inference possible on commodity GPUs.",
+   backTitle:"The Engine Beneath",
+   backText:"vLLM's PagedAttention was a breakthrough: it applied virtual memory concepts to KV cache management, eliminating memory waste and enabling continuous batching. llm-d routes to vLLM-powered pods, and the tight integration means prefix cache metadata flows directly into EPP scoring. The Berkeley team's contributions to disaggregated prefill/decode made it possible to split the compute-heavy prefill stage from the memory-bound decode stage across specialized pod pools."},
+  {role:"The Cache Scientists",org:"University of Chicago",type:"research",
+   desc:"LMCache researchers developed the hierarchical KV cache offloading system that lets llm-d tier cache data across GPU VRAM, CPU memory, and remote storage without losing routing intelligence.",
+   backTitle:"Hierarchical Cache Innovation",
+   backText:"The LMCache team solved a critical problem: what happens when GPU VRAM fills up? Their hierarchical offloading system moves cold cache entries to CPU memory or remote storage while keeping hot entries on-GPU. The innovation was making this tiering transparent to the EPP, so routing decisions still account for offloaded cache. This was essential to v0.5's scale breakthrough, enabling the 16x16 B200 topology to sustain 50k tok/s without cache thrashing."},
+  {role:"The Hardware Bridge Builders",org:"NVIDIA",type:"hardware",
+   desc:"NVIDIA engineers built the NIXL (NVIDIA Interconnect Library) integration that enables fast KV cache transfer between pods during disaggregated serving, making prefill/decode disaggregation practical at scale.",
+   backTitle:"NIXL and Dynamo",
+   backText:"NIXL is the networking fabric that makes disaggregated serving fast. When a prefill pod completes processing, the resulting KV cache needs to move to a decode pod at near-RDMA speeds. NIXL handles this transfer using NVLink and InfiniBand, keeping inter-pod latency below the threshold where disaggregation stops being beneficial. The NVIDIA team also drove the Dynamo integration, pairing Dynamo's execution engine with llm-d's routing intelligence for end-to-end optimized inference pipelines."},
+  {role:"The Cloud Validators",org:"Google Cloud / CoreWeave",type:"cloud",
+   desc:"Google Cloud and CoreWeave teams ran the large-scale validation testing that proved llm-d works beyond lab benchmarks. Their production-scale clusters validated the 50k tok/s throughput on real workloads.",
+   backTitle:"Scale Testing at Production",
+   backText:"Lab benchmarks are one thing. Running on a 16x16 B200 topology with production traffic patterns is another. The Google Cloud team provided TPU integration and cross-cloud validation, proving llm-d runs beyond NVIDIA hardware. CoreWeave brought bare-metal GPU cloud expertise, running sustained load tests that validated active-active HA failover, scale-to-zero cold start times, and cache warming strategies under realistic multi-tenant workloads."},
+];
+
+const ROADMAP_ITEMS = [
+  {id:"v1-stable",version:"v1.0 Horizon",title:"The 1.0 Milestone",
+   desc:"A stable, production-hardened API surface. The v1.0 release will mark the moment llm-d transitions from 'fast-moving project' to 'foundational infrastructure' - the kind you build your platform on. Full backward compatibility guarantees and LTS support.",
+   progress:75,progressLabel:"75% - API stabilization in progress",progressClass:"high",icon:"⚖"},
+  {id:"multi-cluster",version:"Multi-Cluster",title:"Multi-Cluster Federation",
+   desc:"Inference routing that spans clusters, regions, and cloud providers. Cache-aware scheduling across geographic boundaries. One control plane, global GPU utilization. Federated EPP instances sharing cache metadata across cluster boundaries.",
+   progress:40,progressLabel:"40% - Architecture design complete",progressClass:"medium",icon:"🌐"},
+  {id:"agentic",version:"Agentic Patterns",title:"Agentic Inference",
+   desc:"Purpose-built routing for agentic workflows: multi-turn conversations, tool-use chains, and complex reasoning loops that demand persistent context and intelligent cache management. Session-sticky routing with automatic cache pinning.",
+   progress:30,progressLabel:"30% - Prototype in development",progressClass:"medium",icon:"⚡"},
+  {id:"cost-routing",version:"Cost Optimization",title:"Cost-Aware Routing",
+   desc:"Route requests to the cheapest hardware configuration that still meets the SLA. When a request can be served by an H100 or a B200, pick the one that minimizes cost while maintaining latency guarantees. Integrates with cloud billing APIs for real-time pricing.",
+   progress:15,progressLabel:"15% - Requirements gathering",progressClass:"low",icon:"💰"},
+  {id:"multi-modal",version:"Multi-Modal",title:"Multi-Modal Inference",
+   desc:"Handle image, video, and audio inputs alongside text KV caches. Multi-modal models need different cache strategies for different modalities. Vision tokens are large but highly cacheable across similar images. Audio requires streaming-aware routing.",
+   progress:10,progressLabel:"10% - Research phase",progressClass:"low",icon:"🎨"},
+  {id:"model-autoscale",version:"Smart Scaling",title:"Model-Aware Autoscaling",
+   desc:"Scale based on model architecture characteristics, not just request count. A MoE model with 8 experts needs different scaling than a dense model. Autoscaler understands expert utilization, KV cache pressure, and prefill vs. decode ratios to make smarter scaling decisions.",
+   progress:20,progressLabel:"20% - Design RFC submitted",progressClass:"low",icon:"📈"},
+];
+
 
 /* =========================================================
-   AMBIENT PARTICLES
+   AMBIENT PARTICLES WITH TEXT FORMATION
    ========================================================= */
 (function initParticles(){
   const canvas = document.getElementById('particle-canvas');
   const ctx = canvas.getContext('2d');
   let particles = [];
-  const COUNT = 60;
+  const COUNT = 80;
+  let phase = 'forming'; // 'forming' | 'holding' | 'dispersing' | 'floating'
+  let phaseStart = performance.now();
+  const FORM_DURATION = 3000;
+  const HOLD_DURATION = 2000;
+  const DISPERSE_DURATION = 1500;
+  let textPoints = [];
 
   function resize(){
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    textPoints = getTextPoints();
   }
+
+  function getTextPoints(){
+    const pts = [];
+    const tmpCanvas = document.createElement('canvas');
+    const tmpCtx = tmpCanvas.getContext('2d');
+    const w = Math.min(canvas.width * 0.5, 500);
+    const h = 120;
+    tmpCanvas.width = w;
+    tmpCanvas.height = h;
+    tmpCtx.fillStyle = '#fff';
+    tmpCtx.font = 'bold ' + Math.min(80, w * 0.16) + 'px system-ui';
+    tmpCtx.textAlign = 'center';
+    tmpCtx.textBaseline = 'middle';
+    tmpCtx.fillText('llm-d', w / 2, h / 2);
+    const imageData = tmpCtx.getImageData(0, 0, w, h);
+    const data = imageData.data;
+    const step = 4;
+    const offX = (canvas.width - w) / 2;
+    const offY = (canvas.height - h) / 2;
+    for (let y = 0; y < h; y += step) {
+      for (let x = 0; x < w; x += step) {
+        const idx = (y * w + x) * 4;
+        if (data[idx + 3] > 128) {
+          pts.push({ x: x + offX, y: y + offY });
+        }
+      }
+    }
+    return pts;
+  }
+
   resize();
   window.addEventListener('resize', resize);
 
-  for(let i=0;i<COUNT;i++){
+  const colors = ['#3b82f6','#06b6d4','#a855f7','#e2e8f0'];
+  for(let i = 0; i < COUNT; i++){
+    const tp = textPoints.length > 0 ? textPoints[i % textPoints.length] : {x: Math.random() * canvas.width, y: Math.random() * canvas.height};
     particles.push({
-      x: Math.random()*canvas.width,
-      y: Math.random()*canvas.height,
-      r: Math.random()*1.5+0.5,
-      vx: (Math.random()-0.5)*0.3,
-      vy: (Math.random()-0.5)*0.2,
-      alpha: Math.random()*0.3+0.1,
-      color: ['#3b82f6','#06b6d4','#a855f7','#e2e8f0'][Math.floor(Math.random()*4)]
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      homeX: Math.random() * canvas.width,
+      homeY: Math.random() * canvas.height,
+      targetX: tp.x,
+      targetY: tp.y,
+      r: Math.random() * 1.5 + 0.5,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.2,
+      alpha: Math.random() * 0.3 + 0.1,
+      baseAlpha: Math.random() * 0.3 + 0.1,
+      color: colors[Math.floor(Math.random() * 4)]
     });
   }
 
-  function draw(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    particles.forEach(p=>{
-      p.x += p.vx;
-      p.y += p.vy;
-      if(p.x<0) p.x=canvas.width;
-      if(p.x>canvas.width) p.x=0;
-      if(p.y<0) p.y=canvas.height;
-      if(p.y>canvas.height) p.y=0;
+  // Assign text targets more evenly
+  if (textPoints.length > 0) {
+    for (let i = 0; i < COUNT; i++) {
+      const tIdx = Math.floor((i / COUNT) * textPoints.length);
+      particles[i].targetX = textPoints[tIdx].x;
+      particles[i].targetY = textPoints[tIdx].y;
+    }
+  }
+
+  function draw(now){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const elapsed = now - phaseStart;
+
+    if (phase === 'forming') {
+      const t = Math.min(1, elapsed / FORM_DURATION);
+      const ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      particles.forEach(p => {
+        p.x = p.homeX + (p.targetX - p.homeX) * ease;
+        p.y = p.homeY + (p.targetY - p.homeY) * ease;
+        p.alpha = p.baseAlpha + (0.6 - p.baseAlpha) * ease;
+      });
+      if (t >= 1) { phase = 'holding'; phaseStart = now; }
+    } else if (phase === 'holding') {
+      particles.forEach(p => {
+        p.x = p.targetX + Math.sin(now * 0.002 + p.targetX) * 0.8;
+        p.y = p.targetY + Math.cos(now * 0.002 + p.targetY) * 0.8;
+        p.alpha = 0.6;
+      });
+      if (elapsed >= HOLD_DURATION) { phase = 'dispersing'; phaseStart = now;
+        particles.forEach(p => {
+          p.disperseStartX = p.x;
+          p.disperseStartY = p.y;
+          p.homeX = Math.random() * canvas.width;
+          p.homeY = Math.random() * canvas.height;
+          p.vx = (Math.random() - 0.5) * 0.3;
+          p.vy = (Math.random() - 0.5) * 0.2;
+        });
+      }
+    } else if (phase === 'dispersing') {
+      const t = Math.min(1, elapsed / DISPERSE_DURATION);
+      const ease = t * t;
+      particles.forEach(p => {
+        p.x = p.disperseStartX + (p.homeX - p.disperseStartX) * ease;
+        p.y = p.disperseStartY + (p.homeY - p.disperseStartY) * ease;
+        p.alpha = 0.6 + (p.baseAlpha - 0.6) * ease;
+      });
+      if (t >= 1) { phase = 'floating'; }
+    } else {
+      // floating
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if(p.x < 0) p.x = canvas.width;
+        if(p.x > canvas.width) p.x = 0;
+        if(p.y < 0) p.y = canvas.height;
+        if(p.y > canvas.height) p.y = 0;
+      });
+    }
+
+    particles.forEach(p => {
       ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fillStyle = p.color;
       ctx.globalAlpha = p.alpha;
       ctx.fill();
     });
-    ctx.globalAlpha=1;
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+
+/* =========================================================
+   AMBIENT CODE SNIPPETS BACKGROUND
+   ========================================================= */
+(function initAmbientCode(){
+  const canvas = document.getElementById('ambient-code-canvas');
+  const ctx = canvas.getContext('2d');
+  const snippets = ['kubectl apply','EPP.score()','KVCache.hit()','pod.route()','gateway.forward()','prefill.run()','decode.next()','cache.tier()'];
+  let items = [];
+  const COUNT = 14;
+
+  function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = document.documentElement.scrollHeight || window.innerHeight * 5;
+  }
+  resize();
+
+  // Draw a simple Kubernetes wheel (hexagon-ish)
+  function drawK8sWheel(x, y, size, alpha){
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = '#3b82f6';
+    ctx.lineWidth = 1;
+    ctx.translate(x, y);
+    // Outer ring
+    ctx.beginPath();
+    ctx.arc(0, 0, size, 0, Math.PI * 2);
+    ctx.stroke();
+    // Inner spokes (7 spokes for the wheel)
+    for (let i = 0; i < 7; i++) {
+      const angle = (i / 7) * Math.PI * 2 - Math.PI / 2;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(Math.cos(angle) * size * 0.8, Math.sin(angle) * size * 0.8);
+      ctx.stroke();
+      // Small circle at spoke end
+      ctx.beginPath();
+      ctx.arc(Math.cos(angle) * size * 0.8, Math.sin(angle) * size * 0.8, size * 0.15, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  for (let i = 0; i < COUNT; i++){
+    const isWheel = i < 4;
+    items.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.15,
+      vy: (Math.random() - 0.5) * 0.1,
+      text: isWheel ? null : snippets[Math.floor(Math.random() * snippets.length)],
+      isWheel: isWheel,
+      size: isWheel ? Math.random() * 8 + 6 : 0,
+      alpha: Math.random() * 0.03 + 0.03,
+      rotation: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.001
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    items.forEach(item => {
+      item.x += item.vx;
+      item.y += item.vy;
+      item.rotation += item.rotSpeed;
+      // Wrap around the full document height
+      if (item.x < -100) item.x = canvas.width + 50;
+      if (item.x > canvas.width + 100) item.x = -50;
+      if (item.y < -50) item.y = canvas.height + 50;
+      if (item.y > canvas.height + 50) item.y = -50;
+
+      if (item.isWheel) {
+        ctx.save();
+        ctx.translate(item.x, item.y);
+        ctx.rotate(item.rotation);
+        ctx.translate(-item.x, -item.y);
+        drawK8sWheel(item.x, item.y, item.size, item.alpha);
+        ctx.restore();
+      } else {
+        ctx.save();
+        ctx.globalAlpha = item.alpha;
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '11px "SF Mono","Cascadia Code","Fira Code",monospace';
+        ctx.translate(item.x, item.y);
+        ctx.rotate(item.rotation);
+        ctx.fillText(item.text, 0, 0);
+        ctx.restore();
+      }
+    });
     requestAnimationFrame(draw);
   }
   draw();
+
+  // Resize on scroll height change or window resize
+  let lastHeight = 0;
+  function checkResize(){
+    const newH = document.documentElement.scrollHeight;
+    if (newH !== lastHeight) { lastHeight = newH; resize(); }
+    requestAnimationFrame(checkResize);
+  }
+  window.addEventListener('resize', resize);
+  requestAnimationFrame(checkResize);
 })();
 
 
@@ -888,45 +1214,148 @@ function burstParticles(ctx,w,h){
 
 
 /* =========================================================
-   HORIZONTAL TIMELINE
+   GROWTH DASHBOARD
+   ========================================================= */
+function buildDashboard(){
+  const grid = document.getElementById('dashboard-grid');
+  grid.innerHTML = DASHBOARD_COUNTERS.map((d, i) => `
+    <div class="dashboard-card fade-in fade-delay-${Math.min(i+1,5)}" data-idx="${i}">
+      <div class="dashboard-card-icon">${d.icon}</div>
+      <span class="dash-num" data-target="${d.target}" data-suffix="${d.suffix}">0</span>
+      <span class="dash-label">${d.label}</span>
+      <canvas class="dash-sparkline" width="160" height="40"></canvas>
+    </div>`).join('');
+
+  // Animate counters and sparklines on scroll
+  const cards = grid.querySelectorAll('.dashboard-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !e.target.dataset.animated) {
+        e.target.dataset.animated = 'true';
+        const idx = parseInt(e.target.dataset.idx);
+        const d = DASHBOARD_COUNTERS[idx];
+        const numEl = e.target.querySelector('.dash-num');
+        const sparkCanvas = e.target.querySelector('.dash-sparkline');
+        const sCtx = sparkCanvas.getContext('2d');
+        const duration = 2000;
+        let start = null;
+
+        function step(ts) {
+          if (!start) start = ts;
+          const progress = Math.min((ts - start) / duration, 1);
+          const eased = easeOutExpo(progress);
+          numEl.textContent = Math.floor(eased * d.target) + (progress >= 1 ? d.suffix : '');
+          drawSparkline(sCtx, sparkCanvas, d.sparkline, eased);
+          if (progress < 1) requestAnimationFrame(step);
+          else { numEl.textContent = d.target + d.suffix; drawSparkline(sCtx, sparkCanvas, d.sparkline, 1); }
+        }
+        requestAnimationFrame(step);
+      }
+    });
+  }, {threshold: 0.4});
+  cards.forEach(c => observer.observe(c));
+}
+
+function drawSparkline(ctx, canvas, data, progress){
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+
+  const max = Math.max(...data) * 1.1;
+  const pts = data.length;
+  const ptsToShow = Math.min(pts, Math.ceil(progress * pts));
+  if (ptsToShow < 2) return;
+
+  const pad = 4;
+  const chartW = w - pad * 2;
+  const chartH = h - pad * 2;
+
+  // Gradient fill
+  const grad = ctx.createLinearGradient(0, pad, 0, h - pad);
+  grad.addColorStop(0, 'rgba(59,130,246,.25)');
+  grad.addColorStop(1, 'rgba(59,130,246,.0)');
+
+  ctx.beginPath();
+  ctx.moveTo(pad, h - pad);
+  for (let i = 0; i < ptsToShow; i++) {
+    const x = pad + (i / (pts - 1)) * chartW;
+    const y = pad + chartH * (1 - (data[i] * progress) / max);
+    ctx.lineTo(x, y);
+  }
+  const lastX = pad + ((ptsToShow - 1) / (pts - 1)) * chartW;
+  ctx.lineTo(lastX, h - pad);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  for (let i = 0; i < ptsToShow; i++) {
+    const x = pad + (i / (pts - 1)) * chartW;
+    const y = pad + chartH * (1 - (data[i] * progress) / max);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.strokeStyle = '#3b82f6';
+  ctx.lineWidth = 1.5;
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+
+  // Endpoint dot
+  if (ptsToShow > 0) {
+    const ex = pad + ((ptsToShow - 1) / (pts - 1)) * chartW;
+    const ey = pad + chartH * (1 - (data[ptsToShow - 1] * progress) / max);
+    ctx.beginPath();
+    ctx.arc(ex, ey, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#3b82f6';
+    ctx.fill();
+  }
+}
+
+
+/* =========================================================
+   HORIZONTAL TIMELINE WITH FLIP CARDS
    ========================================================= */
 function buildTimeline(){
   const track = document.getElementById('timeline-track');
   track.innerHTML = MILESTONES.map((m,i)=>`
     <div class="milestone-card" data-idx="${i}" id="milestone-${i}">
-      <div class="card-body">
-        <button class="card-close" aria-label="Close">&times;</button>
-        <div class="card-date">${m.date}</div>
-        <div class="card-title">${m.title}</div>
-        <span class="card-tag tag-${m.tag}">${m.tagLabel}</span>
-        <div class="card-detail">
-          <div class="card-detail-inner">
-            <div class="card-image-placeholder"></div>
-            <div class="card-detail-text">${m.detail}</div>
+      <div class="card-flipper">
+        <div class="card-front">
+          <div class="card-body">
+            <div class="card-date">${m.date}</div>
+            <div class="card-title">${m.title}</div>
+            <span class="card-tag tag-${m.tag}">${m.tagLabel}</span>
+            <span class="card-flip-hint">↻ Click to flip</span>
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-body">
+            <div class="card-date">${m.date}</div>
+            <div class="card-title">${m.title}</div>
+            <div class="card-back-detail">${m.detail}</div>
+            <span class="card-back-close">↻ Click to flip back</span>
           </div>
         </div>
       </div>
     </div>`).join('');
 
-  // Click to expand/collapse
+  // Click to flip
   track.querySelectorAll('.milestone-card').forEach(card=>{
-    card.addEventListener('click',(e)=>{
-      if(e.target.classList.contains('card-close')){
-        card.classList.remove('expanded');
-        return;
-      }
-      const isExpanded = card.classList.contains('expanded');
-      // Collapse all others
-      track.querySelectorAll('.milestone-card.expanded').forEach(c=>c.classList.remove('expanded'));
-      if(!isExpanded) card.classList.add('expanded');
+    card.addEventListener('click',()=>{
+      card.classList.toggle('flipped');
     });
   });
 
   // Drag to scroll
   const scrollEl = document.getElementById('timeline-scroll');
-  let isDown=false, startX, scrollLeft;
+  let isDown=false, startX, scrollLeft, dragMoved=false;
   scrollEl.addEventListener('mousedown',(e)=>{
     isDown=true;
+    dragMoved=false;
     scrollEl.classList.add('grabbing');
     startX=e.pageX-scrollEl.offsetLeft;
     scrollLeft=scrollEl.scrollLeft;
@@ -938,6 +1367,7 @@ function buildTimeline(){
     e.preventDefault();
     const x=e.pageX-scrollEl.offsetLeft;
     const walk=(x-startX)*1.5;
+    if(Math.abs(walk)>5) dragMoved=true;
     scrollEl.scrollLeft=scrollLeft-walk;
   });
 
@@ -973,9 +1403,9 @@ function advanceJourney(){
   const card = document.getElementById('milestone-'+journeyIdx);
   if(!card) return stopJourney();
 
-  // Collapse all, expand current
-  document.querySelectorAll('.milestone-card.expanded').forEach(c=>c.classList.remove('expanded'));
-  card.classList.add('expanded');
+  // Unflip all, flip current
+  document.querySelectorAll('.milestone-card.flipped').forEach(c=>c.classList.remove('flipped'));
+  card.classList.add('flipped');
 
   // Scroll to card
   const cardLeft = card.offsetLeft - scrollEl.offsetLeft;
@@ -984,7 +1414,7 @@ function advanceJourney(){
 
   // Narration
   const m = MILESTONES[journeyIdx];
-  document.getElementById('narration-title').textContent = m.date+' — ';
+  document.getElementById('narration-title').textContent = m.date+' - ';
   document.getElementById('narration-desc').textContent = m.desc;
   const pct = ((journeyIdx+1)/MILESTONES.length)*100;
   document.getElementById('narration-progress-fill').style.width = pct+'%';
@@ -1008,7 +1438,7 @@ function stopJourney(){
   document.getElementById('journey-start-btn').style.display='inline-block';
   document.getElementById('journey-stop-btn').style.display='none';
   document.getElementById('narration-bar').classList.remove('visible');
-  document.querySelectorAll('.milestone-card.expanded').forEach(c=>c.classList.remove('expanded'));
+  document.querySelectorAll('.milestone-card.flipped').forEach(c=>c.classList.remove('flipped'));
 }
 
 function initJourney(){
@@ -1276,7 +1706,6 @@ function initPartnerGraph(){
         const key=[p.name,target.name].sort().join('|');
         if(!edgeSet.has(key)){
           edgeSet.add(key);
-          // Determine edge color from the types involved
           let color='#3b82f6';
           const types=[p.type,target.type];
           if(types.includes('hardware'))color='#f97316';
@@ -1291,7 +1720,6 @@ function initPartnerGraph(){
 
   // Dragging
   let dragNode=null, mouseX=0, mouseY=0;
-  let isGrabbing=false;
 
   function getMousePos(e){
     const rect=canvas.getBoundingClientRect();
@@ -1354,7 +1782,6 @@ function initPartnerGraph(){
       if(p===dragNode)return;
       let fx=0,fy=0;
 
-      // Repulsion from all nodes
       PARTNERS.forEach(q=>{
         if(p===q)return;
         let dx=p.x-q.x,dy=p.y-q.y;
@@ -1364,7 +1791,6 @@ function initPartnerGraph(){
         fy+=dy/dist*force;
       });
 
-      // Attraction along edges
       edges.forEach(e=>{
         let other=null;
         if(e.source===p)other=e.target;
@@ -1378,7 +1804,6 @@ function initPartnerGraph(){
         }
       });
 
-      // Center pull
       fx+=(cx-p.x)*centerPull;
       fy+=(cy-p.y)*centerPull;
 
@@ -1387,7 +1812,6 @@ function initPartnerGraph(){
       p.x+=p.vx;
       p.y+=p.vy;
 
-      // Bounds
       p.x=Math.max(p.radius+10,Math.min(W-p.radius-10,p.x));
       p.y=Math.max(p.radius+10,Math.min(H-p.radius-10,p.y));
     });
@@ -1396,7 +1820,6 @@ function initPartnerGraph(){
   function draw(){
     ctx.clearRect(0,0,W,H);
 
-    // Draw edges
     edges.forEach(e=>{
       ctx.beginPath();
       ctx.moveTo(e.source.x,e.source.y);
@@ -1408,20 +1831,13 @@ function initPartnerGraph(){
       ctx.globalAlpha=1;
     });
 
-    // Draw nodes
     PARTNERS.forEach(p=>{
       const color=PARTNER_COLORS[p.type]||'#3b82f6';
-
-      // Glow
       ctx.beginPath();ctx.arc(p.x,p.y,p.radius+4,0,Math.PI*2);
       ctx.fillStyle=color;ctx.globalAlpha=0.08;ctx.fill();ctx.globalAlpha=1;
-
-      // Node circle
       ctx.beginPath();ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
       ctx.fillStyle='#0d1117';ctx.fill();
       ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
-
-      // Label
       ctx.fillStyle='#e2e8f0';ctx.font=`${p.radius>22?'bold ':''}${p.radius>22?11:9}px system-ui`;
       ctx.textAlign='center';ctx.textBaseline='middle';
       const name=p.name.length>14?p.name.split(' ').slice(0,2).join(' '):p.name;
@@ -1433,10 +1849,7 @@ function initPartnerGraph(){
   }
 
   draw();
-
-  window.addEventListener('resize',()=>{
-    resize();
-  });
+  window.addEventListener('resize', resize);
 }
 
 
@@ -1506,7 +1919,6 @@ function drawGrowthChart(){
   function render(progress){
     ctx.clearRect(0,0,W,H);
 
-    // Grid
     for(let v=0;v<=maxVal;v+=5){
       const y=pad.top+chartH*(1-v/maxVal);
       ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(W-pad.right,y);
@@ -1520,14 +1932,12 @@ function drawGrowthChart(){
       const barHeight=(d.value/maxVal)*chartH*Math.min(1,progress);
       const y=pad.top+chartH-barHeight;
 
-      // Bar gradient
       const grad=ctx.createLinearGradient(0,y,0,pad.top+chartH);
       grad.addColorStop(0,'#3b82f6');
       grad.addColorStop(1,'rgba(59,130,246,.2)');
 
       ctx.fillStyle=grad;
       const r=6;
-      // Rounded top bar
       ctx.beginPath();
       ctx.moveTo(x-barW/2,pad.top+chartH);
       ctx.lineTo(x-barW/2,y+r);
@@ -1538,19 +1948,16 @@ function drawGrowthChart(){
       ctx.closePath();
       ctx.fill();
 
-      // Value label
       if(progress>0.5){
         ctx.fillStyle='#e2e8f0';ctx.font='bold 13px system-ui';ctx.textAlign='center';
         const suffix=d.value>=13?'+':'';
         ctx.fillText(Math.round(d.value*Math.min(1,progress))+suffix,x,y-10);
       }
 
-      // X label
       ctx.fillStyle='#64748b';ctx.font='11px system-ui';ctx.textAlign='center';
       ctx.fillText(d.label,x,H-pad.bottom+20);
     });
 
-    // Y axis label
     ctx.save();ctx.translate(14,H/2);ctx.rotate(-Math.PI/2);
     ctx.fillStyle='#64748b';ctx.font='11px system-ui';ctx.textAlign='center';
     ctx.fillText('Organizations',0,0);ctx.restore();
@@ -1577,11 +1984,113 @@ function drawGrowthChart(){
 
 
 /* =========================================================
+   CONTRIBUTOR SPOTLIGHT
+   ========================================================= */
+function buildSpotlight(){
+  const grid = document.getElementById('spotlight-grid');
+  grid.innerHTML = SPOTLIGHT_DATA.map((s, i) => `
+    <div class="spotlight-card fade-in fade-delay-${Math.min(i+1,5)}" data-type="${s.type}">
+      <div class="spotlight-card-inner">
+        <div class="spotlight-card-front">
+          <div>
+            <div class="spotlight-role">${s.role}</div>
+            <div class="spotlight-org">${s.org}</div>
+            <div class="spotlight-desc">${s.desc}</div>
+          </div>
+          <div class="spotlight-flip-hint">↻ Click to learn more</div>
+        </div>
+        <div class="spotlight-card-back">
+          <div class="spotlight-back-title">${s.backTitle}</div>
+          <div class="spotlight-back-text">${s.backText}</div>
+          <div class="spotlight-back-hint">↻ Click to flip back</div>
+        </div>
+      </div>
+    </div>`).join('');
+
+  grid.querySelectorAll('.spotlight-card').forEach(card => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('flipped');
+    });
+  });
+}
+
+
+/* =========================================================
+   ROADMAP WITH VOTING
+   ========================================================= */
+function buildRoadmap(){
+  const container = document.getElementById('roadmap-timeline');
+
+  // Load votes from localStorage
+  let votes = {};
+  try {
+    votes = JSON.parse(localStorage.getItem('llmd-roadmap-votes') || '{}');
+  } catch(e) { votes = {}; }
+
+  let votedItems = {};
+  try {
+    votedItems = JSON.parse(localStorage.getItem('llmd-roadmap-voted') || '{}');
+  } catch(e) { votedItems = {}; }
+
+  function renderRoadmap(){
+    container.innerHTML = ROADMAP_ITEMS.map((item, i) => {
+      const voteCount = votes[item.id] || 0;
+      const hasVoted = votedItems[item.id] || false;
+      return `
+      <div class="roadmap-item fade-in fade-delay-${Math.min(i+1,5)}">
+        <div class="roadmap-header">
+          <span class="roadmap-version">${item.version}</span>
+        </div>
+        <div class="roadmap-title">${item.icon} ${item.title}</div>
+        <div class="roadmap-desc">${item.desc}</div>
+        <div class="roadmap-progress-bar">
+          <div class="roadmap-progress-fill ${item.progressClass}" style="width:${item.progress}%"></div>
+        </div>
+        <div class="roadmap-progress-label">${item.progressLabel}</div>
+        <div class="roadmap-vote">
+          <button class="roadmap-vote-btn ${hasVoted?'voted':''}" data-id="${item.id}" aria-label="Vote for ${item.title}">
+            👍 Vote
+          </button>
+          <span class="roadmap-vote-count">${voteCount} vote${voteCount !== 1 ? 's' : ''}</span>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Attach vote handlers
+    container.querySelectorAll('.roadmap-vote-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.id;
+        if (votedItems[id]) {
+          // Un-vote
+          votedItems[id] = false;
+          votes[id] = Math.max(0, (votes[id] || 0) - 1);
+        } else {
+          // Vote
+          votedItems[id] = true;
+          votes[id] = (votes[id] || 0) + 1;
+        }
+        localStorage.setItem('llmd-roadmap-votes', JSON.stringify(votes));
+        localStorage.setItem('llmd-roadmap-voted', JSON.stringify(votedItems));
+        renderRoadmap();
+        observeFadeIns();
+      });
+    });
+  }
+
+  renderRoadmap();
+}
+
+
+/* =========================================================
    INIT
    ========================================================= */
 function init(){
+  buildDashboard();
   buildTimeline();
   buildPartnerRoster();
+  buildSpotlight();
+  buildRoadmap();
   initJourney();
   initComparison();
   initPartnerGraph();
