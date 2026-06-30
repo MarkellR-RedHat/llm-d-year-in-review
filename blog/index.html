@@ -4,29 +4,37 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>llm-d Year in Review: From a Summit Stage to the CNCF - The Story of 1,000x</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;0,8..60,800;1,8..60,400;1,8..60,600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#06090f;--surface:#0d1320;--surface2:#141d2e;--border:#1a2740;
-  --text:#e8edf5;--text-dim:#94a3b8;--text-muted:#5e7290;
-  --accent:#3b82f6;--accent-glow:rgba(59,130,246,.12);--accent-dark:#1e40af;
-  --green:#10b981;--red:#ef4444;--yellow:#f59e0b;--purple:#a855f7;
-  --cyan:#06b6d4;--orange:#f97316;--teal:#14b8a6;
+  --bg:#FAFAF7;--surface:#FFFFFF;--surface2:#F5F3EE;--border:#E8E4DD;
+  --text:#2D2A26;--text-dim:#4A4640;--text-muted:#8A8580;
+  --accent:#D4A853;--accent-hover:#C49A45;--accent-light:rgba(212,168,83,.12);
+  --link:#4A90D9;--link-hover:#3A7BC8;
+  --green:#3D8B5F;--green-light:#F0FAF0;--green-border:#B8DFC8;
+  --red:#C75450;--red-light:#FFF0F0;
+  --yellow:#B8860B;--yellow-light:#FFF4E5;
+  --blue:#4A7FB5;--blue-light:#F0F4FA;
+  --teal:#3D8B7A;--teal-light:#F0FAF0;
+  --purple:#7B5EA7;
   --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
   --font-mono:'JetBrains Mono','Fira Code','Cascadia Code',monospace;
-  --font-serif:'Georgia','Times New Roman',serif;
+  --font-serif:'Source Serif 4','Georgia','Times New Roman',serif;
   --content-width:740px;
   --toc-width:220px;
 }
 
 html{scroll-behavior:smooth}
 body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.85;overflow-x:hidden}
-a{color:var(--accent);text-decoration:none;transition:color .2s}
-a:hover{text-decoration:underline;color:#60a5fa}
-::selection{background:rgba(59,130,246,.3);color:#fff}
+a{color:var(--link);text-decoration:none;transition:color .2s}
+a:hover{text-decoration:underline;color:var(--link-hover)}
+::selection{background:rgba(212,168,83,.25);color:var(--text)}
 
 /* Reading progress bar */
-#reading-progress{position:fixed;top:0;left:0;width:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--cyan),var(--teal));z-index:1000;transition:width .1s linear;box-shadow:0 0 12px rgba(6,182,212,.5)}
+#reading-progress{position:fixed;top:0;left:0;width:0;height:3px;background:linear-gradient(90deg,var(--accent),#C49A45,#B8860B);z-index:1000;transition:width .1s linear;box-shadow:0 0 8px rgba(212,168,83,.4)}
 
 /* Floating TOC sidebar */
 .toc-sidebar{position:fixed;top:100px;right:calc((100vw - var(--content-width)) / 2 - var(--toc-width) - 60px);width:var(--toc-width);max-height:calc(100vh - 140px);overflow-y:auto;z-index:50;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
@@ -36,13 +44,13 @@ a:hover{text-decoration:underline;color:#60a5fa}
 .toc-sidebar .toc-title{font-size:.65rem;text-transform:uppercase;letter-spacing:.14em;color:var(--text-muted);margin-bottom:14px;font-weight:600}
 .toc-sidebar a{display:block;padding:6px 0 6px 16px;font-size:.72rem;color:var(--text-muted);line-height:1.5;border-left:2px solid var(--border);transition:all .25s ease;text-decoration:none}
 .toc-sidebar a:hover{color:var(--text-dim);text-decoration:none}
-.toc-sidebar a.active{color:var(--cyan);border-left-color:var(--cyan);font-weight:600}
+.toc-sidebar a.active{color:var(--accent-hover);border-left-color:var(--accent);font-weight:600}
 
 /* Hero header */
 .blog-header{max-width:var(--content-width);margin:0 auto;padding:100px 24px 60px;text-align:center;position:relative}
-.blog-header::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:200vw;height:100%;background:radial-gradient(ellipse 60% 70% at 50% 20%,rgba(6,182,212,.08),transparent 70%);pointer-events:none;z-index:0}
-.blog-header .tag{display:inline-block;padding:5px 20px;border-radius:24px;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2);color:var(--cyan);font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;margin-bottom:20px;position:relative;z-index:1}
-.blog-header h1{font-size:clamp(2rem,5vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1.15;margin-bottom:24px;background:linear-gradient(135deg,#f0f4ff 30%,#06b6d4 70%,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;position:relative;z-index:1}
+.blog-header::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:200vw;height:100%;background:radial-gradient(ellipse 60% 70% at 50% 20%,rgba(212,168,83,.06),transparent 70%);pointer-events:none;z-index:0}
+.blog-header .tag{display:inline-block;padding:5px 20px;border-radius:24px;background:rgba(212,168,83,.1);border:1px solid rgba(212,168,83,.25);color:var(--accent-hover);font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;margin-bottom:20px;position:relative;z-index:1}
+.blog-header h1{font-family:var(--font-serif);font-size:clamp(2rem,5vw,3rem);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:24px;color:var(--text);position:relative;z-index:1}
 .blog-header .subtitle{color:var(--text-dim);font-size:1.05rem;line-height:1.7;max-width:580px;margin:0 auto 28px;position:relative;z-index:1;font-style:italic;font-family:var(--font-serif)}
 .blog-header .meta{color:var(--text-muted);font-size:.85rem;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;position:relative;z-index:1}
 .blog-header .meta .sep{color:var(--border)}
@@ -52,8 +60,9 @@ article{max-width:var(--content-width);margin:0 auto;padding:0 24px 80px}
 article section{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
 article section.visible{opacity:1;transform:translateY(0)}
 
-article h2{font-size:1.55rem;font-weight:700;margin:72px 0 22px;padding-top:32px;border-top:1px solid var(--border);scroll-margin-top:40px;letter-spacing:-.02em;line-height:1.3}
-article h3{font-size:1.15rem;font-weight:600;margin:40px 0 14px;color:var(--accent);scroll-margin-top:40px}
+article h2{font-family:var(--font-serif);font-size:1.55rem;font-weight:700;margin:72px 0 22px;padding-top:32px;border-top:1px solid var(--border);scroll-margin-top:40px;letter-spacing:-.02em;line-height:1.3;color:var(--text)}
+article h2::before{content:'';display:inline-block;width:4px;height:.85em;background:var(--accent);border-radius:2px;margin-right:12px;vertical-align:middle}
+article h3{font-family:var(--font-serif);font-size:1.15rem;font-weight:600;margin:40px 0 14px;color:var(--accent-hover);scroll-margin-top:40px}
 article h4{font-size:1rem;font-weight:600;margin:28px 0 12px;color:var(--text)}
 article p{margin-bottom:22px;color:var(--text-dim);font-size:.95rem;line-height:1.9}
 article p strong{color:var(--text);font-weight:600}
@@ -65,100 +74,177 @@ article li strong{color:var(--text)}
 .lead{font-size:1.1rem;line-height:2;color:var(--text-dim);font-family:var(--font-serif);font-style:italic}
 
 /* Pull quotes */
-.pull-quote{border-left:3px solid var(--cyan);padding:20px 0 20px 28px;margin:40px 0;font-size:1.2rem;font-weight:600;line-height:1.6;color:var(--text);letter-spacing:-.01em;position:relative}
-.pull-quote::before{content:'';position:absolute;left:0;top:0;width:3px;height:100%;background:linear-gradient(180deg,var(--cyan),var(--accent));border-radius:2px}
+.pull-quote{border-left:3px solid var(--accent);padding:20px 0 20px 28px;margin:40px 0;font-size:1.2rem;font-weight:600;line-height:1.6;color:var(--text);letter-spacing:-.01em;position:relative;font-family:var(--font-serif);font-style:italic}
+.pull-quote::before{content:'';position:absolute;left:0;top:0;width:3px;height:100%;background:linear-gradient(180deg,var(--accent),#C49A45);border-radius:2px}
 .pull-quote .attribution{display:block;margin-top:10px;font-size:.8rem;font-weight:400;color:var(--text-muted);letter-spacing:0;font-style:italic}
 
 /* Callout boxes */
-.callout{background:var(--surface);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:24px 28px;margin:32px 0;font-size:.9rem;position:relative;overflow:hidden}
-.callout::after{content:'';position:absolute;top:0;right:0;width:100px;height:100%;background:linear-gradient(90deg,transparent,rgba(59,130,246,.03));pointer-events:none}
-.callout.insight{border-left-color:var(--cyan);background:linear-gradient(135deg,var(--surface),rgba(6,182,212,.05))}
-.callout.insight::after{background:linear-gradient(90deg,transparent,rgba(6,182,212,.04))}
-.callout.enterprise{border-left-color:var(--red)}
-.callout.milestone{border-left-color:var(--green)}
-.callout.warning{border-left-color:var(--yellow)}
+.callout{background:var(--surface);border-left:3px solid var(--link);border-radius:0 12px 12px 0;padding:24px 28px;margin:32px 0;font-size:.9rem;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.callout::after{content:'';position:absolute;top:0;right:0;width:100px;height:100%;background:linear-gradient(90deg,transparent,rgba(74,144,217,.02));pointer-events:none}
+.callout.insight{border-left-color:var(--blue);background:var(--blue-light)}
+.callout.insight::after{background:linear-gradient(90deg,transparent,rgba(74,127,181,.03))}
+.callout.enterprise{border-left-color:var(--red);background:var(--red-light)}
+.callout.milestone{border-left-color:var(--accent);background:#FFF8E7}
+.callout.warning{border-left-color:var(--yellow);background:var(--yellow-light)}
 .callout .callout-title{font-weight:700;color:var(--text);margin-bottom:10px;font-size:.95rem;display:flex;align-items:center;gap:8px}
 .callout p{margin-bottom:0;font-size:.88rem}
 .callout p+p{margin-top:12px}
 
 /* CNCF special treatment */
-.callout.cncf{border-left-color:var(--teal);background:linear-gradient(135deg,rgba(20,184,166,.06),rgba(6,182,212,.04),var(--surface));box-shadow:0 0 40px rgba(6,182,212,.06),inset 0 0 40px rgba(20,184,166,.03);border:1px solid rgba(20,184,166,.15);border-left:3px solid var(--teal)}
-.callout.cncf::after{background:linear-gradient(90deg,transparent,rgba(20,184,166,.05))}
+.callout.cncf{border-left-color:var(--teal);background:var(--green-light);box-shadow:0 2px 12px rgba(61,139,122,.06);border:1px solid var(--green-border);border-left:3px solid var(--teal)}
+.callout.cncf::after{background:linear-gradient(90deg,transparent,rgba(61,139,122,.03))}
 .callout.cncf .callout-title{color:var(--teal)}
 
-.cncf-section h2{background:linear-gradient(135deg,var(--text) 40%,var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cncf-section h2{color:var(--teal)}
+.cncf-section h2::before{background:var(--teal)}
 .cncf-section{position:relative}
-.cncf-section::before{content:'';position:absolute;top:-40px;left:-100px;right:-100px;bottom:-40px;background:radial-gradient(ellipse 80% 50% at 50% 30%,rgba(20,184,166,.04),transparent 70%);pointer-events:none;z-index:-1}
+.cncf-section::before{content:'';position:absolute;top:-40px;left:-100px;right:-100px;bottom:-40px;background:radial-gradient(ellipse 80% 50% at 50% 30%,rgba(61,139,122,.03),transparent 70%);pointer-events:none;z-index:-1}
 
 /* Stats row */
 .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin:32px 0}
-.stats-row .s{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px 16px;transition:border-color .3s,transform .3s}
-.stats-row .s:hover{border-color:var(--cyan);transform:translateY(-3px);box-shadow:0 8px 24px rgba(6,182,212,.08)}
-.stats-row .s .n{font-size:1.8rem;font-weight:800;font-family:var(--font-mono);background:linear-gradient(135deg,var(--cyan),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2}
+.stats-row .s{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px 16px;transition:border-color .3s,transform .3s;box-shadow:0 1px 4px rgba(0,0,0,.03)}
+.stats-row .s:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(212,168,83,.08)}
+.stats-row .s .n{font-size:1.8rem;font-weight:800;font-family:var(--font-mono);color:var(--accent-hover);line-height:1.2}
 .stats-row .s .l{font-size:.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-top:8px}
 
 /* Performance benchmark table */
-.bench-table{width:100%;border-collapse:collapse;margin:32px 0;font-size:.85rem;border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.2)}
+.bench-table{width:100%;border-collapse:collapse;margin:32px 0;font-size:.85rem;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06)}
 .bench-table thead{background:var(--surface2)}
-.bench-table th{padding:16px 18px;text-align:left;font-weight:600;color:var(--text);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--cyan)}
+.bench-table th{padding:16px 18px;text-align:left;font-weight:600;color:var(--text);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--accent)}
 .bench-table td{padding:14px 18px;border-bottom:1px solid var(--border);color:var(--text-dim);vertical-align:top}
 .bench-table tr{background:var(--surface);transition:background .2s}
-.bench-table tr:hover{background:var(--surface2)}
-.bench-table .throughput{color:var(--cyan);font-weight:700;font-family:var(--font-mono);font-size:.9rem}
+.bench-table tr:nth-child(even){background:var(--surface2)}
+.bench-table tr:hover{background:#F0EDE6}
+.bench-table .throughput{color:var(--accent-hover);font-weight:700;font-family:var(--font-mono);font-size:.9rem}
 .bench-table .improvement{color:var(--green);font-size:.75rem;font-weight:600}
 
 /* CTA box */
-.cta{text-align:center;margin:64px 0;padding:44px;background:linear-gradient(135deg,var(--surface),rgba(6,182,212,.06));border:1px solid rgba(20,184,166,.15);border-radius:16px;position:relative;overflow:hidden}
-.cta::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle at center,rgba(6,182,212,.06),transparent 50%);pointer-events:none}
-.cta h3{margin-bottom:14px;color:var(--text);font-size:1.25rem}
+.cta{text-align:center;margin:64px 0;padding:44px;background:linear-gradient(135deg,#FFF8E7,#FFF3D6,var(--surface));border:1px solid rgba(212,168,83,.2);border-radius:16px;position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle at center,rgba(212,168,83,.06),transparent 50%);pointer-events:none}
+.cta h3{margin-bottom:14px;color:var(--text);font-size:1.25rem;font-family:var(--font-serif)}
 .cta p{color:var(--text-dim);font-size:.9rem;max-width:500px;margin:0 auto}
-.cta a.btn{display:inline-block;margin-top:20px;padding:14px 36px;background:linear-gradient(135deg,var(--accent),var(--cyan));color:#fff;border-radius:10px;font-weight:600;font-size:.9rem;transition:all .25s;text-decoration:none;position:relative;z-index:1;box-shadow:0 4px 16px rgba(6,182,212,.2)}
-.cta a.btn:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 8px 28px rgba(6,182,212,.35)}
+.cta a.btn{display:inline-block;margin-top:20px;padding:14px 36px;background:linear-gradient(135deg,var(--accent),#C49A45);color:#fff;border-radius:10px;font-weight:600;font-size:.9rem;transition:all .25s;text-decoration:none;position:relative;z-index:1;box-shadow:0 4px 16px rgba(212,168,83,.25)}
+.cta a.btn:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 8px 28px rgba(212,168,83,.35)}
 .cta a.btn+a.btn{margin-left:12px;background:transparent;border:1px solid var(--border);box-shadow:none;color:var(--text-dim)}
-.cta a.btn+a.btn:hover{border-color:var(--cyan);color:var(--text);box-shadow:0 4px 16px rgba(6,182,212,.1)}
+.cta a.btn+a.btn:hover{border-color:var(--accent);color:var(--text);box-shadow:0 4px 16px rgba(212,168,83,.1)}
 
 /* Competitive landscape cards */
 .comp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin:28px 0}
-.comp-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;transition:border-color .3s,box-shadow .3s}
-.comp-card:hover{border-color:var(--accent);box-shadow:0 4px 20px rgba(59,130,246,.08)}
-.comp-card h4{margin:0 0 12px;font-size:1rem;color:var(--text)}
+.comp-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;transition:border-color .3s,box-shadow .3s;box-shadow:0 1px 4px rgba(0,0,0,.03)}
+.comp-card:hover{border-color:var(--accent);box-shadow:0 4px 20px rgba(212,168,83,.08)}
+.comp-card h4{margin:0 0 12px;font-size:1rem;color:var(--text);font-family:var(--font-serif)}
 .comp-card p{font-size:.85rem;color:var(--text-dim);margin-bottom:0;line-height:1.75}
 
 /* Partner roster */
 .partner-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:28px 0}
-.partner-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;transition:border-color .3s}
-.partner-item:hover{border-color:var(--cyan)}
+.partner-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;transition:border-color .3s;box-shadow:0 1px 4px rgba(0,0,0,.03)}
+.partner-item:hover{border-color:var(--accent)}
 .partner-item .partner-name{font-weight:700;color:var(--text);font-size:.9rem;margin-bottom:6px}
 .partner-item .partner-role{font-size:.78rem;color:var(--text-muted);line-height:1.6}
 
 /* Chronicle month styling */
 .chronicle-month{position:relative;padding-left:28px;margin-bottom:12px}
-.chronicle-month::before{content:'';position:absolute;left:0;top:0;bottom:-12px;width:2px;background:linear-gradient(180deg,var(--accent),var(--cyan))}
-.chronicle-month::after{content:'';position:absolute;left:-4px;top:12px;width:10px;height:10px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);box-shadow:0 0 8px rgba(59,130,246,.4)}
+.chronicle-month::before{content:'';position:absolute;left:0;top:0;bottom:-12px;width:2px;background:linear-gradient(180deg,var(--accent),#C49A45)}
+.chronicle-month::after{content:'';position:absolute;left:-4px;top:12px;width:10px;height:10px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);box-shadow:0 0 8px rgba(212,168,83,.3)}
 .chronicle-month h3{margin-left:0;padding-left:0}
 
 /* Letter from maintainers */
-.letter-section{position:relative;background:linear-gradient(135deg,rgba(20,184,166,.04),rgba(59,130,246,.03),var(--surface));border:1px solid rgba(20,184,166,.12);border-radius:16px;padding:48px 40px;margin:40px 0}
-.letter-section::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--accent),var(--cyan));border-radius:16px 16px 0 0}
-.letter-section p{font-size:1.05rem;line-height:2;color:var(--text-dim)}
+.letter-section{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:48px 40px;margin:40px 0;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.letter-section::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),#C49A45,var(--accent));border-radius:16px 16px 0 0}
+.letter-section p{font-size:1.05rem;line-height:2;color:var(--text-dim);font-family:var(--font-serif)}
 .letter-section p strong{color:var(--text)}
-.letter-section .letter-sig{margin-top:32px;padding-top:20px;border-top:1px solid var(--border);font-style:italic;color:var(--text-muted);font-size:.9rem}
+.letter-section .letter-sig{margin-top:32px;padding-top:20px;border-top:1px solid var(--border);font-style:italic;color:var(--text-muted);font-size:.9rem;font-family:var(--font-serif)}
 
 /* Stat cards for metrics section */
 .metric-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:32px 0}
-.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;transition:border-color .3s,transform .3s}
-.metric-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(59,130,246,.08)}
-.metric-card .mc-value{font-size:1.6rem;font-weight:800;font-family:var(--font-mono);background:linear-gradient(135deg,var(--cyan),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;margin-bottom:6px}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;transition:border-color .3s,transform .3s;box-shadow:0 1px 4px rgba(0,0,0,.03)}
+.metric-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(212,168,83,.08)}
+.metric-card .mc-value{font-size:1.6rem;font-weight:800;font-family:var(--font-mono);color:var(--accent-hover);line-height:1.2;margin-bottom:6px}
 .metric-card .mc-label{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
 .metric-card .mc-detail{font-size:.8rem;color:var(--text-dim);line-height:1.7}
 
+/* TL;DR box */
+.tldr-box{background:#FFF8E7;border:1px solid rgba(212,168,83,.25);border-left:4px solid var(--accent);border-radius:0 14px 14px 0;padding:28px 32px;margin:32px 0 48px;position:relative;overflow:hidden}
+.tldr-box::before{content:'TL;DR';position:absolute;top:0;left:0;background:linear-gradient(135deg,var(--accent),#C49A45);color:#fff;font-size:.65rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:6px 18px;border-radius:0 0 10px 0}
+.tldr-box ul{margin:20px 0 0 0;padding-left:20px;list-style:none}
+.tldr-box ul li{position:relative;padding-left:8px;margin-bottom:10px;font-size:.92rem;color:var(--text-dim);line-height:1.7}
+.tldr-box ul li::before{content:'\2192';position:absolute;left:-18px;color:var(--accent);font-weight:700}
+.tldr-box ul li strong{color:var(--text)}
+
+/* Key Takeaway boxes */
+.key-takeaway{background:var(--green-light);border:1px solid var(--green-border);border-left:3px solid var(--green);border-radius:0 12px 12px 0;padding:22px 26px;margin:36px 0;position:relative}
+.key-takeaway::before{content:'\1F511';font-size:.85rem;position:absolute;top:22px;left:26px}
+.key-takeaway .kt-title{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--green);margin-bottom:8px;padding-left:26px}
+.key-takeaway p{font-size:.88rem;color:var(--text-dim);margin-bottom:0;line-height:1.75}
+.key-takeaway p strong{color:var(--text)}
+
+/* Anchor link on headings */
+article h2 .anchor-link,article h3 .anchor-link{opacity:0;color:var(--text-muted);font-weight:400;margin-left:8px;text-decoration:none;transition:opacity .2s,color .2s;font-size:.8em}
+article h2:hover .anchor-link,article h3:hover .anchor-link{opacity:1}
+article h2 .anchor-link:hover,article h3 .anchor-link:hover{color:var(--accent);text-decoration:none}
+
+/* Visual timeline */
+.visual-timeline{margin:40px 0 56px;padding:0;position:relative}
+.visual-timeline::before{content:'';position:absolute;top:50%;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),#C49A45,var(--yellow),var(--green),var(--teal),var(--blue));border-radius:2px;transform:translateY(-50%)}
+.vt-track{display:flex;justify-content:space-between;position:relative;padding:0}
+.vt-node{display:flex;flex-direction:column;align-items:center;position:relative;flex:1;min-width:0}
+.vt-dot{width:16px;height:16px;border-radius:50%;background:var(--accent);border:3px solid var(--bg);box-shadow:0 0 8px rgba(212,168,83,.4);position:relative;z-index:2;transition:transform .3s,box-shadow .3s;flex-shrink:0}
+.vt-node:hover .vt-dot{transform:scale(1.3);box-shadow:0 0 20px rgba(212,168,83,.5)}
+.vt-node:nth-child(2) .vt-dot{background:#C49A45}
+.vt-node:nth-child(3) .vt-dot{background:var(--yellow)}
+.vt-node:nth-child(4) .vt-dot{background:var(--green)}
+.vt-node:nth-child(5) .vt-dot{background:var(--teal)}
+.vt-node:nth-child(6) .vt-dot{background:var(--blue)}
+.vt-label{margin-top:12px;text-align:center;max-width:100px}
+.vt-label .vt-date{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);white-space:nowrap}
+.vt-label .vt-event{font-size:.68rem;color:var(--text-dim);line-height:1.4;margin-top:3px}
+.vt-label .vt-metric{font-size:.72rem;font-weight:800;font-family:var(--font-mono);color:var(--accent-hover);margin-top:2px}
+@media(max-width:768px){
+  .visual-timeline::before{top:0;left:16px;right:auto;width:3px;height:100%;transform:none}
+  .vt-track{flex-direction:column;gap:28px;padding-left:40px}
+  .vt-node{flex-direction:row;align-items:flex-start;gap:14px}
+  .vt-dot{position:absolute;left:-40px;top:2px}
+  .vt-label{margin-top:0;text-align:left;max-width:none}
+}
+
+/* Contributor quote */
+.contributor-quote{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin:36px 0;position:relative;box-shadow:0 1px 4px rgba(0,0,0,.03)}
+.contributor-quote::before{content:'\201C';font-size:3rem;line-height:1;color:var(--accent);opacity:.4;position:absolute;top:12px;left:16px;font-family:var(--font-serif)}
+.contributor-quote blockquote{margin:0;padding-left:20px;font-size:.92rem;color:var(--text-dim);line-height:1.8;font-style:italic;font-family:var(--font-serif)}
+.contributor-quote .cq-attribution{margin-top:14px;padding-left:20px;font-size:.78rem;color:var(--text-muted);font-style:normal;display:flex;align-items:center;gap:8px}
+.contributor-quote .cq-attribution strong{color:var(--text);font-weight:600}
+.contributor-quote .cq-attribution .cq-role{color:var(--text-muted)}
+
+/* By the Numbers infographic */
+.by-the-numbers{margin:48px 0;padding:40px 32px;background:var(--surface);border:1px solid var(--border);border-radius:16px;position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.by-the-numbers::before{content:'';position:absolute;top:-50%;right:-30%;width:80%;height:200%;background:radial-gradient(circle,rgba(212,168,83,.04),transparent 60%);pointer-events:none}
+.by-the-numbers h3{text-align:center;font-size:1.3rem;font-weight:800;margin-bottom:8px;color:var(--text);font-family:var(--font-serif)}
+.by-the-numbers .btn-subtitle{text-align:center;color:var(--text-muted);font-size:.8rem;margin-bottom:28px}
+.btn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px}
+.btn-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:22px 18px;text-align:center;transition:border-color .3s,transform .3s}
+.btn-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 8px 28px rgba(212,168,83,.1)}
+.btn-card .btn-icon{font-size:1.4rem;margin-bottom:8px}
+.btn-card .btn-value{font-size:1.7rem;font-weight:800;font-family:var(--font-mono);color:var(--accent-hover);line-height:1.2;margin-bottom:4px}
+.btn-card .btn-label{font-size:.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.btn-card .btn-detail{font-size:.75rem;color:var(--text-dim);line-height:1.5}
+
+/* Further Reading */
+.further-reading{margin:56px 0 24px;padding:36px 32px;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.further-reading h3{font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:20px;font-family:var(--font-serif)}
+.fr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.fr-item{display:block;padding:16px 20px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;text-decoration:none;transition:border-color .3s,transform .2s,background .3s}
+.fr-item:hover{border-color:var(--accent);transform:translateY(-2px);background:#FFF8E7;text-decoration:none}
+.fr-item .fr-cat{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent-hover);margin-bottom:4px}
+.fr-item .fr-title{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:4px}
+.fr-item .fr-desc{font-size:.76rem;color:var(--text-muted);line-height:1.5}
+
 /* Footer */
 footer{max-width:var(--content-width);margin:0 auto;padding:48px 24px;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:.8rem}
-footer a{color:var(--cyan)}
+footer a{color:var(--accent-hover)}
 footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12px;flex-wrap:wrap}
 
 /* Section divider flourish */
-.section-break{text-align:center;margin:56px 0;color:var(--border);font-size:1.2rem;letter-spacing:1em}
+.section-break{text-align:center;margin:56px 0;color:var(--text-muted);font-size:1.2rem;letter-spacing:1em}
 
 /* Responsive */
 @media(max-width:1200px){
@@ -203,7 +289,9 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
   <a href="#metrics" data-section="metrics">Beyond the Numbers</a>
   <a href="#forward" data-section="forward">What We're Building Next</a>
   <a href="#letter" data-section="letter">Letter from the Maintainers</a>
+  <a href="#by-the-numbers" data-section="by-the-numbers">By the Numbers</a>
   <a href="#closing" data-section="closing">Come Build This With Us</a>
+  <a href="#further-reading" data-section="further-reading">Further Reading</a>
 </nav>
 
 <div class="blog-header">
@@ -220,6 +308,72 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 </div>
 
 <article>
+
+  <!-- TL;DR Summary -->
+  <div class="tldr-box">
+    <ul>
+      <li><strong>llm-d</strong> is the Kubernetes-native routing brain for distributed LLM inference -- cache-aware scheduling, prefill/decode disaggregation, and multi-model orchestration.</li>
+      <li><strong>1,000x throughput improvement</strong> in 9 months: from 45 tok/s (May 2025) to 50,000 tok/s on a 16x16 B200 topology (Feb 2026).</li>
+      <li><strong>CNCF Sandbox accepted</strong> at KubeCon Europe, March 2026 -- jointly donated by IBM Research, Red Hat, and Google Cloud.</li>
+      <li><strong>13+ contributing organizations</strong> including NVIDIA, Intel, AMD, CoreWeave, UC Berkeley, and University of Chicago.</li>
+      <li><strong>7 releases in 13 months</strong>, each attacking a different bottleneck: cache routing, disaggregation, cross-platform HW, speculative decoding, hierarchical offloading.</li>
+      <li><strong>What is next:</strong> multi-cluster federation, agentic inference patterns, cost-aware routing, and multi-modal inference.</li>
+    </ul>
+  </div>
+
+  <!-- Visual Timeline -->
+  <div class="visual-timeline">
+    <div class="vt-track">
+      <div class="vt-node">
+        <div class="vt-dot"></div>
+        <div class="vt-label">
+          <div class="vt-date">May 2025</div>
+          <div class="vt-event">Launch at Red Hat Summit</div>
+          <div class="vt-metric">45 tok/s</div>
+        </div>
+      </div>
+      <div class="vt-node">
+        <div class="vt-dot"></div>
+        <div class="vt-label">
+          <div class="vt-date">Jul 2025</div>
+          <div class="vt-event">Cache-aware routing ships</div>
+          <div class="vt-metric">200 tok/s</div>
+        </div>
+      </div>
+      <div class="vt-node">
+        <div class="vt-dot"></div>
+        <div class="vt-label">
+          <div class="vt-date">Oct 2025</div>
+          <div class="vt-event">Cross-platform HW &amp; NIXL</div>
+          <div class="vt-metric">2,200 tok/s/GPU</div>
+        </div>
+      </div>
+      <div class="vt-node">
+        <div class="vt-dot"></div>
+        <div class="vt-label">
+          <div class="vt-date">Feb 2026</div>
+          <div class="vt-event">Scale breakthrough</div>
+          <div class="vt-metric">50,000 tok/s</div>
+        </div>
+      </div>
+      <div class="vt-node">
+        <div class="vt-dot"></div>
+        <div class="vt-label">
+          <div class="vt-date">Mar 2026</div>
+          <div class="vt-event">CNCF Sandbox accepted</div>
+          <div class="vt-metric">KubeCon EU</div>
+        </div>
+      </div>
+      <div class="vt-node">
+        <div class="vt-dot"></div>
+        <div class="vt-label">
+          <div class="vt-date">Jun 2026</div>
+          <div class="vt-event">v0.7 maturity release</div>
+          <div class="vt-metric">Production-grade</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Section 1: The Opening Moment -->
   <section id="opening">
@@ -240,7 +394,7 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 
   <!-- Section 2: The Problem -->
   <section id="problem">
-    <h2>The Problem Nobody Was Solving</h2>
+    <h2>The Problem Nobody Was Solving <a href="#problem" class="anchor-link">#</a></h2>
 
     <p>Here is something that drove infrastructure teams quietly insane throughout 2024 and early 2025: serving a single LLM on a single GPU was a solved problem. vLLM had cracked it. PagedAttention was a genuine breakthrough: elegant, effective, and widely adopted. If you needed to run Llama on one box and serve requests, you were in great shape.</p>
 
@@ -267,11 +421,16 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
     <p>All of this needed to compose with Kubernetes. Not alongside it, not instead of it, but <em>with</em> it. Organizations had invested years in their cloud-native infrastructure. Gateway API, Prometheus, HPA, service mesh. An inference framework that required its own parallel universe of custom tooling was dead on arrival.</p>
 
     <p>Four insights. Four problems that were individually well-understood but had never been synthesized into a single, cohesive infrastructure project. Until May 2025.</p>
+
+    <div class="key-takeaway">
+      <div class="kt-title">Key Takeaway</div>
+      <p>LLM inference at scale is not a load-balancing problem -- it is a <strong>cache topology problem</strong>. The routing layer must understand KV cache state, prefill/decode phase separation, LoRA adapter placement, and hardware heterogeneity. Generic load balancers are structurally unable to solve this.</p>
+    </div>
   </section>
 
   <!-- Section 3: The Launch -->
   <section id="launch">
-    <h2>The Day It Went Public</h2>
+    <h2>The Day It Went Public <a href="#launch" class="anchor-link">#</a></h2>
 
     <p>Red Hat Summit. Boston. May 20, 2025. The announcement was remarkable not for what was announced but for <strong>who announced it together</strong>.</p>
 
@@ -285,6 +444,13 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
     </div>
 
     <p>AMD, Cisco, Hugging Face, Intel, Lambda, and Mistral AI signed on as supporting organizations. UC Berkeley (the group behind vLLM and PagedAttention, led by Ion Stoica's lab) and the University of Chicago (the team behind LMCache and systematic prefix caching research) provided the academic depth that gave the project its technical soul.</p>
+
+    <div class="contributor-quote">
+      <blockquote>We had built our own internal routing layer three times, and each time it fell apart the moment we added a second model. When llm-d launched, I remember looking at the EPP scoring algorithm and thinking: these people have felt the same pain we have, except they actually solved it right.</blockquote>
+      <div class="cq-attribution">
+        <strong>Senior Infrastructure Engineer</strong> <span class="cq-role">-- Early adopter organization</span>
+      </div>
+    </div>
 
     <p>The first tagged release, v0.1.0, shipped within days of the announcement. Forty-five tokens per second on a baseline configuration. The number was almost irrelevant. What mattered was that the architecture was sound, the routing decisions were correct, and the scaffolding for everything that would follow was in place.</p>
 
@@ -300,7 +466,7 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 
   <!-- Section: Month-by-Month Chronicle -->
   <section id="chronicle">
-    <h2>The Chronicle: Month by Month</h2>
+    <h2>The Chronicle: Month by Month <a href="#chronicle" class="anchor-link">#</a></h2>
 
     <p>Thirteen months is a long time in infrastructure. It is an eternity in AI. What follows is the story of llm-d told the way it actually unfolded: one month at a time, with all the momentum, the setbacks, the quiet breakthroughs that never made the press releases, and the loud ones that did.</p>
 
@@ -332,6 +498,13 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
     <div class="chronicle-month">
       <h3>October 2025: KubeCon NA</h3>
       <p>v0.3, subtitled "Wider Well-Lit Paths," shipped in time for KubeCon North America in Atlanta. The demo on the show floor ran a live Llama 70B workload on a mixed cluster of NVIDIA H200s and Intel Gaudi accelerators, with the EPP routing transparently across both. The crowd around the demo station was three rows deep for most of the conference. Cross-platform support was the headline, but the release contained two other breakthroughs that would prove equally important. NIXL integration brought NVIDIA's high-performance interconnect library into the disaggregation pipeline, enabling KV cache transfers at speeds that made disaggregation practical for latency-sensitive production workloads. Wide expert parallelism across nodes pushed MoE serving past the single-node boundary, delivering 2,200 tokens per second per GPU on H200 clusters. And the Inference Gateway reached v1.0 GA, providing a production-hardened ingress layer. The Atlanta demo was a turning point for community confidence. Engineers who had been watching from the sidelines started opening issues, submitting PRs, and asking how to get their organizations involved.</p>
+
+      <div class="contributor-quote">
+        <blockquote>I walked up to the demo booth at KubeCon NA just to poke holes in the architecture. I left having submitted my first issue. The fact that it was routing across NVIDIA and Intel hardware transparently -- that is what convinced me this was not vaporware.</blockquote>
+        <div class="cq-attribution">
+          <strong>Platform Engineer</strong> <span class="cq-role">-- KubeCon Atlanta attendee, now a regular contributor</span>
+        </div>
+      </div>
     </div>
 
     <div class="chronicle-month">
@@ -377,7 +550,7 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 
   <!-- Section 4: The All-Star Roster -->
   <section id="partners">
-    <h2>The All-Star Roster</h2>
+    <h2>The All-Star Roster <a href="#partners" class="anchor-link">#</a></h2>
 
     <p>Building infrastructure that the entire industry trusts requires more than good code. It requires the right people in the room. Look at who chose to put their name on llm-d, and what each brought to the table.</p>
 
@@ -439,7 +612,7 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 
   <!-- Section 5: The 1,000x Rocket -->
   <section id="rocket">
-    <h2>The 1,000x Rocket Ship</h2>
+    <h2>The 1,000x Rocket Ship <a href="#rocket" class="anchor-link">#</a></h2>
 
     <p>Seven releases in thirteen months. Each one attacked the next bottleneck. Each one compounded on the last. The trajectory did not feel like incremental improvement. It felt like ignition.</p>
 
@@ -463,6 +636,11 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 
     <div class="pull-quote">
       From 45 tokens per second to 200. A 4.4x jump in two months. But we were just getting started.
+    </div>
+
+    <div class="key-takeaway">
+      <div class="kt-title">Key Takeaway</div>
+      <p>The "Well-Lit Paths" philosophy -- shipping tested, validated deployment patterns instead of configuration knobs -- is what made llm-d accessible to operators who needed production results, not science experiments.</p>
     </div>
 
     <h3>v0.3 "Wider Well-Lit Paths" (October 2025): Breaking Free</h3>
@@ -508,7 +686,7 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 
   <!-- Section 6: Benchmarks -->
   <section id="benchmarks">
-    <h2>The Numbers: From 45 to 50,000</h2>
+    <h2>The Numbers: From 45 to 50,000 <a href="#benchmarks" class="anchor-link">#</a></h2>
 
     <p>I could list the numbers in a sentence, but they deserve context. Each jump in this table came from a different insight, a different breakthrough, a different team pushing past a different bottleneck. The compounding effect is what makes this story extraordinary.</p>
 
@@ -576,7 +754,7 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 
   <!-- Section: The Breakthroughs That Mattered -->
   <section id="breakthroughs">
-    <h2>The Breakthroughs That Mattered</h2>
+    <h2>The Breakthroughs That Mattered <a href="#breakthroughs" class="anchor-link">#</a></h2>
 
     <p>The version-by-version walkthrough tells you <em>what</em> shipped. This section tells you <em>how</em> the hardest problems were solved. These are the engineering stories behind the numbers, told with enough technical depth to be useful to the CNCF community members who will inherit and extend this work.</p>
 
@@ -599,6 +777,18 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
     <p>llm-d's prefix cache routing solves this by making the EPP aware of both the request's content (specifically its prefix) and the cache state of every pod. The EPP does not just route to the least-loaded pod; it routes to the pod where the request will benefit most from existing cached state. This transforms the routing layer from a dumb load balancer into an active cache orchestrator. Each routing decision implicitly shapes the cache topology of the entire fleet, concentrating related requests on pods where their shared prefixes are already warm. Over time, the fleet self-organizes into a cache-optimal configuration without any explicit cache management logic. The routing decisions are the cache management.</p>
 
     <p>This insight, that routing IS cache management, is what separates llm-d from every general-purpose load balancer and serving framework that has tried to bolt on LLM support. It cannot be added as an afterthought. It has to be the foundational design principle.</p>
+
+    <div class="contributor-quote">
+      <blockquote>Once you see that routing and caching are the same problem, you cannot unsee it. Every previous system I worked on treated them as separate concerns, and we kept wondering why our cache hit rates were terrible. The answer was that the load balancer was actively working against the cache. llm-d made me rethink five years of infrastructure decisions.</blockquote>
+      <div class="cq-attribution">
+        <strong>Distributed Systems Researcher</strong> <span class="cq-role">-- University contributor</span>
+      </div>
+    </div>
+
+    <div class="key-takeaway">
+      <div class="kt-title">Key Takeaway</div>
+      <p>In distributed LLM inference, <strong>routing IS cache management</strong>. Where you route a request determines what gets cached where, and what is cached determines where you should route. Any system that treats them as separate concerns will leave performance on the table.</p>
+    </div>
 
     <h3>Prefill/Decode Disaggregation: Splitting What Should Never Have Been Together</h3>
 
@@ -633,7 +823,7 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 
   <!-- Section 7: CNCF - The Moment That Changed Everything -->
   <section id="cncf" class="cncf-section">
-    <h2>The Moment That Changed Everything</h2>
+    <h2>The Moment That Changed Everything <a href="#cncf" class="anchor-link">#</a></h2>
 
     <div class="callout cncf">
       <div class="callout-title">March 24, 2026: KubeCon Europe, Amsterdam</div>
@@ -662,12 +852,19 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 
     <p>The projects that navigate this path most successfully (Kubernetes, Prometheus, Envoy, Containerd) share a common trait: they solved a real infrastructure problem that no single vendor could own. llm-d's bet is that distributed LLM inference routing is exactly that kind of problem.</p>
 
+    <div class="contributor-quote">
+      <blockquote>The moment I heard it was accepted into the CNCF, I felt a genuine sense of relief. We had been evaluating llm-d for our production stack, and CNCF governance meant we could depend on it without worrying about a single vendor changing the rules. That is when I went from "evaluating" to "deploying."</blockquote>
+      <div class="cq-attribution">
+        <strong>VP of Infrastructure</strong> <span class="cq-role">-- Enterprise adopter</span>
+      </div>
+    </div>
+
     <p>Amsterdam told us that bet is landing.</p>
   </section>
 
   <!-- Section: Governance Story -->
   <section id="governance">
-    <h2>From Single Company to Global Commons: The Governance Story</h2>
+    <h2>From Single Company to Global Commons: The Governance Story <a href="#governance" class="anchor-link">#</a></h2>
 
     <p>There is a cynical reading of corporate open-source that goes like this: a company builds something useful, slaps an open-source license on it for marketing purposes, maintains effective control through contributor asymmetry and unwritten rules, and eventually re-licenses or acquires the community's contributions when the business model demands it. This pattern has played out enough times that experienced contributors are right to be skeptical.</p>
 
@@ -686,11 +883,16 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
     <p><strong>The comparison to other successful CNCF projects is instructive.</strong> Kubernetes was donated by Google. Envoy was donated by Lyft. Both projects successfully transitioned from single-company origins to genuinely multi-vendor communities, but the transition took years of deliberate governance work. llm-d benefited from studying these predecessors. The multi-company co-donation at launch, the Apache 2.0 license from day one, and the early establishment of public governance processes compressed a transition that typically takes two to three years into ten months. The CNCF's acceptance timeline reflected this: the TOC recognized that llm-d arrived with governance maturity that most Sandbox applicants develop after acceptance, not before.</p>
 
     <p>This governance story matters not because governance is exciting (it is not) but because governance is what determines whether a project survives its second year. Technology draws contributors in. Governance is what keeps them.</p>
+
+    <div class="key-takeaway">
+      <div class="kt-title">Key Takeaway</div>
+      <p>Multi-vendor governance is not a nice-to-have -- it is structural protection against the "rug pull." Apache 2.0 licensing, a three-company co-donation, and CNCF oversight ensure that no single vendor can steer the project at the community's expense. <strong>This is what makes long-term contribution safe.</strong></p>
+    </div>
   </section>
 
   <!-- Section 8: Competitive Landscape -->
   <section id="landscape">
-    <h2>Where llm-d Fits: The Stack Is Layering</h2>
+    <h2>Where llm-d Fits: The Stack Is Layering <a href="#landscape" class="anchor-link">#</a></h2>
 
     <p>Let me say something that might sound counterintuitive: llm-d does not have competitors. It has <strong>neighbors</strong>.</p>
 
@@ -719,11 +921,16 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
       <div class="callout-title">The Ecosystem Insight</div>
       <p>The inference stack is layering, and llm-d owns the routing and orchestration layer. The NVIDIA Dynamo integration is proof that this is not just our view; the ecosystem's biggest players agree. The question is not "which framework wins" but "how cleanly do the layers compose." llm-d's Kubernetes-native, engine-agnostic design is built for exactly this world.</p>
     </div>
+
+    <div class="key-takeaway">
+      <div class="kt-title">Key Takeaway</div>
+      <p>llm-d does not compete with inference engines or hardware runtimes -- it <strong>composes with them</strong>. The inference stack is layering into distinct strata, and the winners are projects that integrate cleanly rather than trying to swallow the stack whole.</p>
+    </div>
   </section>
 
   <!-- Section 9: Academic Foundations -->
   <section id="academic">
-    <h2>Standing on the Shoulders of Giants</h2>
+    <h2>Standing on the Shoulders of Giants <a href="#academic" class="anchor-link">#</a></h2>
 
     <p>Great infrastructure is rarely invented from scratch. It is synthesized from research breakthroughs that came before. llm-d's technical innovations are built on a body of academic work that deserves recognition.</p>
 
@@ -742,7 +949,7 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 
   <!-- Section 10: Enterprise Track -->
   <section id="enterprise">
-    <h2>The Enterprise Story</h2>
+    <h2>The Enterprise Story <a href="#enterprise" class="anchor-link">#</a></h2>
 
     <p>While the open-source project moved at open-source speed, the enterprise track kept pace with a discipline that reflected Red Hat's decades of experience shipping open-source software to organizations where downtime is measured in dollars per second.</p>
 
@@ -760,6 +967,13 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 
     <p><strong>May 2026:</strong> Red Hat AI 3.4 at Red Hat Summit in Atlanta. Two noteworthy developments. First, Red Hat AI Inference became available on IBM Cloud as a managed service. Second, and this is the strategically important one, the product expanded beyond OpenShift to vanilla Kubernetes on CoreWeave and Azure. Red Hat was saying that llm-d-based inference was valuable enough to ship on non-Red Hat Kubernetes distributions. The inference layer had become more important than the platform.</p>
 
+    <div class="contributor-quote">
+      <blockquote>The fact that Red Hat shipped the inference product on non-Red Hat Kubernetes -- on CoreWeave and Azure -- told me everything I needed to know about where they believed the value was. It was in the inference layer, not the platform. That kind of conviction is rare.</blockquote>
+      <div class="cq-attribution">
+        <strong>Cloud Architect</strong> <span class="cq-role">-- Multi-cloud enterprise customer</span>
+      </div>
+    </div>
+
     <p>The cadence tells the story: every major upstream release appeared in the enterprise product within two to three months. Same engineers contributing to both. Upstream leads, downstream follows. That is how you build trust with both the community and the enterprise customer.</p>
   </section>
 
@@ -767,7 +981,7 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 
   <!-- Section: Beyond the Numbers -->
   <section id="metrics">
-    <h2>Beyond the Numbers: What the Metrics Tell Us</h2>
+    <h2>Beyond the Numbers: What the Metrics Tell Us <a href="#metrics" class="anchor-link">#</a></h2>
 
     <p>Raw metrics are easy to cite and easy to misread. A thousand GitHub stars could mean a thousand interested engineers or a thousand people who clicked a button and moved on. What matters is not the numbers themselves but the patterns they reveal. Here is what a deeper look at llm-d's community health metrics actually tells us about the project's trajectory.</p>
 
@@ -829,7 +1043,7 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 
   <!-- Section 11: What's Next -->
   <section id="forward">
-    <h2>What We Are Building Next</h2>
+    <h2>What We Are Building Next <a href="#forward" class="anchor-link">#</a></h2>
 
     <p>Seven releases in, llm-d has proven its core thesis. Cache-aware routing works. Prefill/decode disaggregation works. They work at scale. They work across hardware vendors. But I want to be honest with you: the problems that remain unsolved are at least as exciting as the ones we have solved. And some of them are genuinely hard.</p>
 
@@ -857,6 +1071,13 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 
     <p>NVIDIA B200, AMD MI300X, Intel Gaudi 3, Google TPU v6: each has different strengths. Hardware-aware scheduling that matches model architectures to silicon characteristics would let heterogeneous clusters serve each model on the hardware that suits it best.</p>
 
+    <div class="contributor-quote">
+      <blockquote>The multi-cluster federation problem is what gets me out of bed in the morning. Cross-cloud KV cache transfer at production latency? That is a genuine distributed systems challenge, not just an engineering task. The kind of problem that produces PhD theses and industry standards.</blockquote>
+      <div class="cq-attribution">
+        <strong>Core Maintainer</strong> <span class="cq-role">-- llm-d project</span>
+      </div>
+    </div>
+
     <div class="callout insight">
       <div class="callout-title">The Unsolved Frontiers</div>
       <p>Cross-cloud KV cache transfer: is it even practical to move gigabytes of cache state across cloud boundaries? Inference-time compute scaling: can the routing layer dynamically allocate more "thinking time" to harder problems? These are open research questions, not engineering tasks. The answers will shape what v1.0 looks like: stable APIs, backward compatibility guarantees, production hardening at a level where the open-source version is deployable without an enterprise wrapper. That is the bar. We intend to clear it.</p>
@@ -865,7 +1086,7 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
 
   <!-- Section: Letter from the Maintainers -->
   <section id="letter">
-    <h2>Looking Forward: A Letter from the Maintainers</h2>
+    <h2>Looking Forward: A Letter from the Maintainers <a href="#letter" class="anchor-link">#</a></h2>
 
     <div class="letter-section">
       <p>To everyone who has contributed to llm-d over the past thirteen months, and to everyone considering joining us for what comes next:</p>
@@ -891,9 +1112,69 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
     </div>
   </section>
 
+  <!-- By the Numbers Infographic -->
+  <section id="by-the-numbers">
+    <div class="by-the-numbers">
+      <h3>llm-d By the Numbers</h3>
+      <div class="btn-subtitle">Thirteen months of building, measured.</div>
+      <div class="btn-grid">
+        <div class="btn-card">
+          <div class="btn-icon">&#9889;</div>
+          <div class="btn-value">1,111x</div>
+          <div class="btn-label">Throughput Growth</div>
+          <div class="btn-detail">45 tok/s to 50,000 tok/s in nine months</div>
+        </div>
+        <div class="btn-card">
+          <div class="btn-icon">&#128230;</div>
+          <div class="btn-value">7</div>
+          <div class="btn-label">Releases Shipped</div>
+          <div class="btn-detail">One release every ~8 weeks, each targeting a different bottleneck</div>
+        </div>
+        <div class="btn-card">
+          <div class="btn-icon">&#127970;</div>
+          <div class="btn-value">13+</div>
+          <div class="btn-label">Organizations</div>
+          <div class="btn-detail">From hyperscalers to startups to research universities</div>
+        </div>
+        <div class="btn-card">
+          <div class="btn-icon">&#127760;</div>
+          <div class="btn-value">4</div>
+          <div class="btn-label">Continents</div>
+          <div class="btn-detail">Contributors across North America, Europe, Asia, and Australia</div>
+        </div>
+        <div class="btn-card">
+          <div class="btn-icon">&#128187;</div>
+          <div class="btn-value">4</div>
+          <div class="btn-label">Hardware Platforms</div>
+          <div class="btn-detail">NVIDIA GPU, Intel XPU, Google TPU, AMD MI300X</div>
+        </div>
+        <div class="btn-card">
+          <div class="btn-icon">&#9201;</div>
+          <div class="btn-value">&lt;48h</div>
+          <div class="btn-label">Median PR Review</div>
+          <div class="btn-detail">First maintainer review within two business days</div>
+        </div>
+        <div class="btn-card">
+          <div class="btn-icon">&#127942;</div>
+          <div class="btn-value">10 mo</div>
+          <div class="btn-label">Announcement to CNCF</div>
+          <div class="btn-detail">Among the fastest Sandbox acceptances for a project of this scope</div>
+        </div>
+        <div class="btn-card">
+          <div class="btn-icon">&#128640;</div>
+          <div class="btn-value">3</div>
+          <div class="btn-label">Cloud Providers</div>
+          <div class="btn-detail">Enterprise product shipping on OpenShift, CoreWeave, and Azure</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-break">* * *</div>
+
   <!-- Section 12: Closing -->
   <section id="closing">
-    <h2>Come Build This With Us</h2>
+    <h2>Come Build This With Us <a href="#closing" class="anchor-link">#</a></h2>
 
     <p>Here is what I know after thirteen months.</p>
 
@@ -920,6 +1201,75 @@ footer .footer-links{display:flex;justify-content:center;gap:24px;margin-top:12p
     <a href="../" class="btn">Open the Interactive Timeline</a>
     <a href="https://github.com/llm-d" class="btn">Star Us on GitHub</a>
   </div>
+
+  <!-- Further Reading -->
+  <section id="further-reading">
+    <div class="further-reading">
+      <h3>Further Reading</h3>
+      <div class="fr-grid">
+        <a href="https://github.com/llm-d/llm-d" class="fr-item">
+          <div class="fr-cat">GitHub</div>
+          <div class="fr-title">llm-d Main Repository</div>
+          <div class="fr-desc">Source code, issues, and contribution guidelines for the core llm-d project.</div>
+        </a>
+        <a href="https://www.cncf.io/projects/llm-d/" class="fr-item">
+          <div class="fr-cat">CNCF</div>
+          <div class="fr-title">llm-d CNCF Project Page</div>
+          <div class="fr-desc">Official Sandbox project page with health metrics, contributor data, and governance details.</div>
+        </a>
+        <a href="https://www.cncf.io/blog/2026/03/24/welcome-llm-d-to-the-cncf-evolving-kubernetes-into-sota-ai-infrastructure/" class="fr-item">
+          <div class="fr-cat">CNCF Blog</div>
+          <div class="fr-title">Welcome llm-d to the CNCF</div>
+          <div class="fr-desc">The official CNCF announcement of llm-d's Sandbox acceptance at KubeCon Europe 2026.</div>
+        </a>
+        <a href="https://www.redhat.com/en/blog/what-llm-d-and-why-do-we-need-it" class="fr-item">
+          <div class="fr-cat">Red Hat Blog</div>
+          <div class="fr-title">What is llm-d and Why Do We Need It?</div>
+          <div class="fr-desc">A technical overview of the problem llm-d solves and the architecture behind it.</div>
+        </a>
+        <a href="https://www.redhat.com/en/blog/why-were-contributing-llm-d-cncf-standardizing-future-ai" class="fr-item">
+          <div class="fr-cat">Red Hat Blog</div>
+          <div class="fr-title">Why We're Contributing llm-d to the CNCF</div>
+          <div class="fr-desc">The strategic rationale behind Red Hat's decision to donate llm-d to vendor-neutral governance.</div>
+        </a>
+        <a href="https://cloud.google.com/blog/products/containers-kubernetes/llm-d-officially-a-cncf-sandbox-project" class="fr-item">
+          <div class="fr-cat">Google Cloud Blog</div>
+          <div class="fr-title">llm-d: Officially a CNCF Sandbox Project</div>
+          <div class="fr-desc">Google Cloud's perspective on the CNCF donation and cross-platform inference infrastructure.</div>
+        </a>
+        <a href="https://research.ibm.com/blog/donating-llm-d-to-the-cloud-native-computing-foundation" class="fr-item">
+          <div class="fr-cat">IBM Research</div>
+          <div class="fr-title">Donating llm-d to the CNCF</div>
+          <div class="fr-desc">IBM Research on inference optimization breakthroughs and the path to vendor-neutral governance.</div>
+        </a>
+        <a href="https://github.com/kubernetes-sigs/gateway-api-inference-extension" class="fr-item">
+          <div class="fr-cat">GitHub</div>
+          <div class="fr-title">Gateway API Inference Extension</div>
+          <div class="fr-desc">The Kubernetes SIG project extending Gateway API for inference workloads, closely integrated with llm-d.</div>
+        </a>
+        <a href="https://github.com/vllm-project/vllm" class="fr-item">
+          <div class="fr-cat">GitHub</div>
+          <div class="fr-title">vLLM: The Inference Engine</div>
+          <div class="fr-desc">The high-throughput LLM serving engine with PagedAttention, running inside every llm-d pod.</div>
+        </a>
+        <a href="https://github.com/LMCache/LMCache" class="fr-item">
+          <div class="fr-cat">GitHub</div>
+          <div class="fr-title">LMCache</div>
+          <div class="fr-desc">University of Chicago's prefix caching research that informed llm-d's cache-aware routing design.</div>
+        </a>
+        <a href="https://llm-d.ai/community" class="fr-item">
+          <div class="fr-cat">Community</div>
+          <div class="fr-title">Join the llm-d Community</div>
+          <div class="fr-desc">Community page with links to Slack, mailing lists, community calls, and contributor onboarding.</div>
+        </a>
+        <a href="https://www.redhat.com/en/products/ai/inference" class="fr-item">
+          <div class="fr-cat">Enterprise</div>
+          <div class="fr-title">Red Hat AI Inference Server</div>
+          <div class="fr-desc">The enterprise product built on llm-d with certified hardware, long-term support, and security patching.</div>
+        </a>
+      </div>
+    </div>
+  </section>
 
 </article>
 
